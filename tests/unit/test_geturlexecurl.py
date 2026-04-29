@@ -2,13 +2,13 @@
 
 # -*- coding: utf-8 -*-
 """
-udocker unit tests: GetURLexeCurl
+kooker unit tests: GetURLexeCurl
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch
-from udocker.utils.curl import GetURLexeCurl
-from udocker.config import Config
+from kooker.utils.curl import GetURLexeCurl
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -38,7 +38,7 @@ class GetURLexeCurlTestCase(TestCase):
         self.assertIsNone(geturl._opts)
         self.assertIsNone(geturl._files)
 
-    @patch('udocker.utils.curl.FileUtil.find_exec')
+    @patch('kooker.utils.curl.FileUtil.find_exec')
     def test_02_is_available(self, mock_findexec):
         """Test02 GetURLexeCurl()._is_available()."""
         mock_findexec.return_value = "/tmp"
@@ -52,7 +52,7 @@ class GetURLexeCurlTestCase(TestCase):
     # def test_03__select_implementation(self):
     #     """Test03 GetURLexeCurl()._select_implementation()."""
 
-    @patch('udocker.utils.curl.FileUtil.mktmp')
+    @patch('kooker.utils.curl.FileUtil.mktmp')
     def test_04__set_defaults(self, mock_mktemp):
         """Test04 GetURLexeCurl()._set_defaults()"""
         mock_mktemp.side_effect = ["/tmp/err", "/tmp/out", "/tmp/hdr"]
@@ -73,8 +73,8 @@ class GetURLexeCurlTestCase(TestCase):
         self.assertEqual(geturl._files["error_file"], "/tmp/err")
         self.assertEqual(geturl._files["header_file"], "/tmp/hdr")
 
-    @patch('udocker.utils.curl.FileUtil.remove')
-    @patch('udocker.utils.curl.json.dumps')
+    @patch('kooker.utils.curl.FileUtil.remove')
+    @patch('kooker.utils.curl.json.dumps')
     def test_05__mkcurlcmd(self, mock_jdump, mock_furm):
         """Test05 GetURLexeCurl()._mkcurlcmd()."""
         argl = ["http://host"]

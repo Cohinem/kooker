@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-udocker unit tests: OSInfo
+kooker unit tests: OSInfo
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch
-from udocker.helper.osinfo import OSInfo
-from udocker.config import Config
+from kooker.helper.osinfo import OSInfo
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -17,7 +17,7 @@ class GuestInfoTestCase(TestCase):
 
     def setUp(self):
         Config().getconf()
-        self.rootdir = "~/.udocker/container/abcd0/ROOT"
+        self.rootdir = "~/.kooker/container/abcd0/ROOT"
         self.file = "/bin/ls"
         self.noosdist = ("", "xx")
 
@@ -29,9 +29,9 @@ class GuestInfoTestCase(TestCase):
         ginfo = OSInfo(self.rootdir)
         self.assertEqual(ginfo._root_dir, self.rootdir)
 
-    @patch('udocker.helper.osinfo.os.path.islink')
-    @patch('udocker.helper.osinfo.Uprocess.get_output')
-    @patch('udocker.helper.osinfo.os.path.isfile')
+    @patch('kooker.helper.osinfo.os.path.islink')
+    @patch('kooker.helper.osinfo.Uprocess.get_output')
+    @patch('kooker.helper.osinfo.os.path.isfile')
     def test_02_get_filetype(self, mock_isfile, mock_getout, mock_islink):
         """Test02 OSInfo.get_filetype(filename)"""
         # file does not exist
@@ -76,9 +76,9 @@ class GuestInfoTestCase(TestCase):
         status = ginfo.arch()
         self.assertEqual(status, "amd64")
 
-    @patch('udocker.helper.osinfo.os.path.exists')
-    @patch('udocker.helper.osinfo.FileUtil.match')
-    @patch('udocker.helper.osinfo.FileUtil.getdata')
+    @patch('kooker.helper.osinfo.os.path.exists')
+    @patch('kooker.helper.osinfo.FileUtil.match')
+    @patch('kooker.helper.osinfo.FileUtil.getdata')
     def test_04_osdistribution(self, mock_gdata, mock_match, mock_exists):
         """Test04 OSInfo.osdistribution()"""
         lsbdata = "DISTRIB_ID=Ubuntu\n" \

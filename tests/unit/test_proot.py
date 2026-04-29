@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-udocker unit tests: PRootEngine
+kooker unit tests: PRootEngine
 """
 
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
-from udocker.config import Config
-from udocker.engine.proot import PRootEngine
+from kooker.config import Config
+from kooker.engine.proot import PRootEngine
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -27,13 +27,13 @@ class PRootEngineTestCase(TestCase):
         Config().conf['oskernel'] = "4.8.13"
         Config().conf['location'] = ""
 
-        str_local = 'udocker.container.localrepo.LocalRepository'
+        str_local = 'kooker.container.localrepo.LocalRepository'
         self.lrepo = patch(str_local)
         self.local = self.lrepo.start()
         self.mock_lrepo = Mock()
         self.local.return_value = self.mock_lrepo
 
-        str_exmode = 'udocker.engine.execmode.ExecutionMode'
+        str_exmode = 'kooker.engine.execmode.ExecutionMode'
         self.execmode = patch(str_exmode)
         self.xmode = self.execmode.start()
         self.mock_execmode = Mock()
@@ -43,7 +43,7 @@ class PRootEngineTestCase(TestCase):
         self.lrepo.stop()
         self.execmode.stop()
 
-    @patch('udocker.engine.proot.HostInfo.oskernel')
+    @patch('kooker.engine.proot.HostInfo.oskernel')
     def test_01_init(self, mock_kernel):
         """Test01 PRootEngine() constructor."""
         mock_kernel.return_value = "4.8.13"
@@ -52,9 +52,9 @@ class PRootEngineTestCase(TestCase):
         self.assertEqual(prex._kernel, "4.8.13")
 
     @patch.object(PRootEngine, '_is_seccomp_patched')
-    @patch('udocker.engine.proot.HostInfo.oskernel_isgreater')
-    @patch('udocker.engine.proot.FileUtil.find_file_in_dir')
-    @patch('udocker.helper.elfpatcher.os.path.exists')
+    @patch('kooker.engine.proot.HostInfo.oskernel_isgreater')
+    @patch('kooker.engine.proot.FileUtil.find_file_in_dir')
+    @patch('kooker.helper.elfpatcher.os.path.exists')
     def test_02_select_proot(self, mock_exists, mock_fimage,
                              mock_isgreater, mock_issecomp):
         """Test02 PRootEngine().select_proot()."""
@@ -145,7 +145,7 @@ class PRootEngineTestCase(TestCase):
         self.assertEqual(status, ['-b', '/tmp:/tmp', '-b', '/bbb:/bbb'])
 
     @patch.object(PRootEngine, '_has_option')
-    @patch('udocker.engine.proot.ExecutionEngineCommon._get_portsmap')
+    @patch('kooker.engine.proot.ExecutionEngineCommon._get_portsmap')
     def test_06__get_network_map(self, mock_pmap, mock_hasopt):
         """Test06 PRootEngine()._get_network_map()."""
         mock_pmap.return_value = {}
@@ -169,10 +169,10 @@ class PRootEngineTestCase(TestCase):
         self.assertEqual(status, ['-p', '80:8080', '-p', '443:8443', '-n'])
 
     @patch.object(PRootEngine, '_get_qemu_string')
-    @patch('udocker.engine.proot.os.environ.update')
+    @patch('kooker.engine.proot.os.environ.update')
     @patch.object(PRootEngine, '_get_network_map')
-    @patch('udocker.engine.nvidia.Msg')
-    @patch('udocker.engine.proot.HostInfo.oskernel_isgreater')
+    @patch('kooker.engine.nvidia.Msg')
+    @patch('kooker.engine.proot.HostInfo.oskernel_isgreater')
     @patch.object(PRootEngine, '_run_banner')
     @patch.object(PRootEngine, '_run_env_cleanup_dict')
     @patch.object(PRootEngine, '_set_uid_map')
@@ -180,9 +180,9 @@ class PRootEngineTestCase(TestCase):
     @patch.object(PRootEngine, '_set_cpu_affinity')
     @patch.object(PRootEngine, '_run_env_set')
     @patch.object(PRootEngine, 'select_proot')
-    @patch('udocker.engine.proot.os.getenv')
-    @patch('udocker.engine.proot.subprocess.call')
-    @patch('udocker.engine.proot.ExecutionEngineCommon._run_init')
+    @patch('kooker.engine.proot.os.getenv')
+    @patch('kooker.engine.proot.subprocess.call')
+    @patch('kooker.engine.proot.ExecutionEngineCommon._run_init')
     def test_07_run(self, mock_run_init, mock_call, mock_getenv, mock_sel_proot,
                     mock_run_env_set,
                     mock_set_cpu_aff, mock_get_vol_bind, mock_set_uid_map,

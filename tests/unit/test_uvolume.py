@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-udocker unit tests: Uvolume
+kooker unit tests: Uvolume
 """
 
 from unittest import TestCase, main
-from udocker.utils.uvolume import Uvolume
+from kooker.utils.uvolume import Uvolume
 import collections
 
 collections.Callable = collections.abc.Callable

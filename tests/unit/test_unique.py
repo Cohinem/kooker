@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-udocker unit tests: Unique
+kooker unit tests: Unique
 """
 
 from unittest import TestCase, main
-from udocker.helper.unique import Unique
+from kooker.helper.unique import Unique
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -16,7 +16,7 @@ class UniqueTestCase(TestCase):
     def test_01_init(self):
         """Test01 Unique() constructor."""
         uniq = Unique()
-        self.assertEqual(uniq.def_name, "udocker")
+        self.assertEqual(uniq.def_name, "kooker")
 
     def test_02__rnd(self):
         """Test02 Unique._rnd()."""
@@ -56,11 +56,11 @@ class UniqueTestCase(TestCase):
         uniq = Unique()
         rand = uniq.filename("zxcvbnmasdf")
         self.assertTrue(rand.endswith("zxcvbnmasdf"))
-        self.assertTrue(rand.startswith("udocker"))
+        self.assertTrue(rand.startswith("kooker"))
         self.assertGreater(len(rand.strip()), 56)
         rand = uniq.filename(12345)
         self.assertTrue(rand.endswith("12345"))
-        self.assertTrue(rand.startswith("udocker"))
+        self.assertTrue(rand.startswith("kooker"))
         self.assertGreater(len(rand.strip()), 50)
 
 

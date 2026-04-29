@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 """
-udocker unit tests: UMain
+kooker unit tests: UMain
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch
-from udocker.umain import UMain
-from udocker.config import Config
+from kooker.umain import UMain
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
 
 
 class UMainTestCase(TestCase):
-    """Test UMain() class main udocker program."""
+    """Test UMain() class main kooker program."""
 
     def setUp(self):
         Config().getconf()
@@ -23,18 +23,18 @@ class UMainTestCase(TestCase):
 
     def test_01_init(self):
         """Test01 UMain(argv) constructor."""
-        argv = ["udocker", "-h"]
+        argv = ["kooker", "-h"]
         udoc = UMain(argv)
         self.assertEqual(udoc.argv, argv)
 
-    @patch('udocker.umain.Msg')
-    @patch('udocker.umain.UdockerCLI')
-    @patch('udocker.umain.LocalRepository')
-    @patch('udocker.umain.os.geteuid')
+    @patch('kooker.umain.Msg')
+    @patch('kooker.umain.KookerCLI')
+    @patch('kooker.umain.LocalRepository')
+    @patch('kooker.umain.os.geteuid')
     def test_02__prepare_exec(self, mock_getuid,
                               mock_local, mock_ucli, mock_msg):
         """Test02 UMain()._prepare_exec()."""
-        argv = ["udocker", "-h"]
+        argv = ["kooker", "-h"]
         mock_msg.level = 0
         mock_msg.VER = 4
         mock_getuid.return_value = 0
@@ -43,7 +43,7 @@ class UMainTestCase(TestCase):
             umain._prepare_exec()
             self.assertTrue(mock_exit.called)
 
-        argv = ["udocker", "-h", "--debug", "--insecure"]
+        argv = ["kooker", "-h", "--debug", "--insecure"]
         mock_msg.level = 0
         mock_msg.VER = 4
         mock_getuid.return_value = 100
@@ -56,47 +56,47 @@ class UMainTestCase(TestCase):
         self.assertTrue(mock_local.return_value.is_repo.called)
         self.assertTrue(mock_ucli.called)
 
-    @patch('udocker.umain.Msg')
-    @patch('udocker.umain.UdockerCLI')
+    @patch('kooker.umain.Msg')
+    @patch('kooker.umain.KookerCLI')
     def test_03_execute(self, mock_ucli, mock_msg):
         """Test03 UMain().execute()."""
         mock_msg.level = 0
-        argv = ['udocker', '--allow-root', '-h']
+        argv = ['kooker', '--allow-root', '-h']
         mock_ucli.return_value.do_help.return_value = 0
         umain = UMain(argv)
         status = umain.execute()
         self.assertTrue(mock_ucli.return_value.do_help.called)
         self.assertEqual(status, 0)
 
-        argv = ['udocker', '--allow-root', '--version']
+        argv = ['kooker', '--allow-root', '--version']
         mock_ucli.return_value.do_version.return_value = 0
         umain = UMain(argv)
         status = umain.execute()
         self.assertTrue(mock_ucli.return_value.do_version.called)
         self.assertEqual(status, 0)
 
-        argv = ['udocker', '--allow-root', 'install']
+        argv = ['kooker', '--allow-root', 'install']
         mock_ucli.return_value.do_install.return_value = 0
         umain = UMain(argv)
         status = umain.execute()
         self.assertTrue(mock_ucli.return_value.do_install.called)
         self.assertEqual(status, 0)
 
-        argv = ['udocker', '--allow-root', 'showconf']
+        argv = ['kooker', '--allow-root', 'showconf']
         mock_ucli.return_value.do_showconf.return_value = 0
         umain = UMain(argv)
         status = umain.execute()
         self.assertTrue(mock_ucli.return_value.do_showconf.called)
         self.assertEqual(status, 0)
 
-        argv = ['udocker', '--allow-root', 'rm']
+        argv = ['kooker', '--allow-root', 'rm']
         mock_ucli.return_value.do_rm.return_value = 0
         umain = UMain(argv)
         status = umain.execute()
         self.assertTrue(mock_ucli.return_value.do_rm.called)
         self.assertEqual(status, 0)
 
-        argv = ['udocker', '--allow-root', 'faking']
+        argv = ['kooker', '--allow-root', 'faking']
         umain = UMain(argv)
         status = umain.execute()
         self.assertEqual(status, 1)

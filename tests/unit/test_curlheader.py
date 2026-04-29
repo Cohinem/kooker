@@ -2,13 +2,13 @@
 
 # -*- coding: utf-8 -*-
 """
-udocker unit tests: CurlHeader
+kooker unit tests: CurlHeader
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch
 from io import StringIO
-from udocker.utils.curl import CurlHeader
+from kooker.utils.curl import CurlHeader
 import collections
 
 collections.Callable = collections.abc.Callable

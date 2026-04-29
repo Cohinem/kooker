@@ -2,7 +2,7 @@
 
 # ##################################################################
 #
-# udocker high level testing
+# kooker high level testing
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,26 +32,26 @@ THIS_SCRIPT_NAME=$( basename "$0" )
 
 # Variables for the tests
 declare -a FAILED_TESTS
-DEFAULT_UDIR=$HOME/.udocker-tests
-TEST_UDIR=$HOME/.udocker-test-h45y7k9X
+DEFAULT_UDIR=$HOME/.kooker-tests
+TEST_UDIR=$HOME/.kooker-test-h45y7k9X
 TAR_IMAGE="centos7.tar"
 TAR_CONT="centos7-cont.tar"
-TAR_IMAGE_URL="https://download.a.incd.pt/udocker_test/${TAR_IMAGE}"
-TAR_CONT_URL="https://download.a.incd.pt/udocker_test/${TAR_CONT}"
+TAR_IMAGE_URL="https://download.a.incd.pt/kooker_test/${TAR_IMAGE}"
+TAR_CONT_URL="https://download.a.incd.pt/kooker_test/${TAR_CONT}"
 DOCKER_IMG="ubuntu:22.04"
 CONT="ubuntu"
-export UDOCKER_DIR=${DEFAULT_UDIR}
+export KOOKER_DIR=${DEFAULT_UDIR}
 
 if [ -n "$1" ]
 then
-  UDOCKER_CMD="$1"
+  KOOKER_CMD="$1"
 else
-  UDOCKER_CMD=$(type -p udocker)
+  KOOKER_CMD=$(type -p kooker)
 fi
 
-if [ ! -x "$UDOCKER_CMD" ]
+if [ ! -x "$KOOKER_CMD" ]
 then
-  echo "ERROR udocker file not executable: $UDOCKER_CMD"
+  echo "ERROR kooker file not executable: $KOOKER_CMD"
   exit 1
 fi
 
@@ -115,154 +115,154 @@ function result_inv
   echo "/                                                                                                                                    \ "
 }
 
-function udocker
+function kooker
 {
-  $PYTHON_CMD $UDOCKER_CMD $*
+  $PYTHON_CMD $KOOKER_CMD $*
 }
 
 echo "================================================="
-echo "* This script tests all udocker CLI and options *"
+echo "* This script tests all kooker CLI and options *"
 echo "* except the run command and vol. mount options *"
 echo "================================================="
 
-STRING="T001: udocker install"
+STRING="T001: kooker install"
 clean
-udocker install && ls ${DEFAULT_UDIR}/bin/proot-x86_64; return=$?
+kooker install && ls ${DEFAULT_UDIR}/bin/proot-x86_64; return=$?
 result
 
-STRING="T002: udocker install --force"
-udocker install --force && \
+STRING="T002: kooker install --force"
+kooker install --force && \
     ls ${DEFAULT_UDIR}/bin/proot-x86_64 >/dev/null 2>&1; return=$?
 result
 
-STRING="T003: udocker (with no options)"
-udocker ; return=$?
+STRING="T003: kooker (with no options)"
+kooker ; return=$?
 result
 
-STRING="T004: udocker help"
-udocker help >/dev/null 2>&1 ; return=$?
+STRING="T004: kooker help"
+kooker help >/dev/null 2>&1 ; return=$?
 result
 
-STRING="T005: udocker -h"
-udocker -h >/dev/null 2>&1 ; return=$?
+STRING="T005: kooker -h"
+kooker -h >/dev/null 2>&1 ; return=$?
 result
 
-STRING="T006: udocker showconf"
-udocker showconf; return=$?
+STRING="T006: kooker showconf"
+kooker showconf; return=$?
 result
 
-STRING="T007: udocker version"
-udocker version; return=$?
+STRING="T007: kooker version"
+kooker version; return=$?
 result
 
-STRING="T008: udocker -D version"
-udocker -D version; return=$?
+STRING="T008: kooker -D version"
+kooker -D version; return=$?
 result
 
-STRING="T009: udocker --quiet version"
-udocker --quiet version; return=$?
+STRING="T009: kooker --quiet version"
+kooker --quiet version; return=$?
 result
 
-STRING="T010: udocker -q version"
-udocker -q version; return=$?
+STRING="T010: kooker -q version"
+kooker -q version; return=$?
 result
 
-STRING="T011: udocker --debug version"
-udocker --debug version; return=$?
+STRING="T011: kooker --debug version"
+kooker --debug version; return=$?
 result
 
-STRING="T012: udocker -V"
-udocker -V >/dev/null 2>&1 ; return=$?
+STRING="T012: kooker -V"
+kooker -V >/dev/null 2>&1 ; return=$?
 result
 
-STRING="T013: udocker --version"
-udocker --version >/dev/null 2>&1 ; return=$?
+STRING="T013: kooker --version"
+kooker --version >/dev/null 2>&1 ; return=$?
 result
 
-STRING="T014: udocker search -a"
-udocker search -a gromacs | grep ^gromacs; return=$?
+STRING="T014: kooker search -a"
+kooker search -a gromacs | grep ^gromacs; return=$?
 result
 
-STRING="T015: udocker pull ${DOCKER_IMG}"
-udocker pull ${DOCKER_IMG}; return=$?
+STRING="T015: kooker pull ${DOCKER_IMG}"
+kooker pull ${DOCKER_IMG}; return=$?
 result
 
-STRING="T016: udocker --insecure pull ${DOCKER_IMG}"
-udocker --insecure pull ${DOCKER_IMG}; return=$?
+STRING="T016: kooker --insecure pull ${DOCKER_IMG}"
+kooker --insecure pull ${DOCKER_IMG}; return=$?
 result
 
-STRING="T017: udocker verify ${DOCKER_IMG}"
-udocker verify ${DOCKER_IMG}; return=$?
+STRING="T017: kooker verify ${DOCKER_IMG}"
+kooker verify ${DOCKER_IMG}; return=$?
 result
 ## TODO: Add test to check layers after pull
 
-STRING="T018: udocker images"
-udocker images; return=$?
+STRING="T018: kooker images"
+kooker images; return=$?
 result
 
-STRING="T019: udocker inspect (image)"
-udocker inspect ${DOCKER_IMG}; return=$?
+STRING="T019: kooker inspect (image)"
+kooker inspect ${DOCKER_IMG}; return=$?
 result
 
-STRING="T020: udocker -q create ${DOCKER_IMG}"
-CONT_ID=`udocker -q create ${DOCKER_IMG}`; return=$?
+STRING="T020: kooker -q create ${DOCKER_IMG}"
+CONT_ID=`kooker -q create ${DOCKER_IMG}`; return=$?
 result
 
-STRING="T021: udocker create --name=${CONT} ${DOCKER_IMG}"
-CONT_ID_NAME=`udocker create --name=${CONT} ${DOCKER_IMG}`; return=$?
+STRING="T021: kooker create --name=${CONT} ${DOCKER_IMG}"
+CONT_ID_NAME=`kooker create --name=${CONT} ${DOCKER_IMG}`; return=$?
 result
 
-STRING="T022: udocker ps"
-udocker ps; return=$?
+STRING="T022: kooker ps"
+kooker ps; return=$?
 result
 
-STRING="T023: udocker name ${CONT_ID}"
-udocker name ${CONT_ID} conti; return=$?
-udocker ps |grep conti
+STRING="T023: kooker name ${CONT_ID}"
+kooker name ${CONT_ID} conti; return=$?
+kooker ps |grep conti
 result
 
-STRING="T024: udocker rmname"
-udocker rmname conti; return=$?
-udocker ps |grep ${CONT_ID}
+STRING="T024: kooker rmname"
+kooker rmname conti; return=$?
+kooker ps |grep ${CONT_ID}
 result
 
-STRING="T025: udocker inspect (container ${CONT_ID})"
-udocker inspect ${CONT_ID}; return=$?
+STRING="T025: kooker inspect (container ${CONT_ID})"
+kooker inspect ${CONT_ID}; return=$?
 result
 
-STRING="T026: udocker clone --name=myclone ${CONT_ID}"
-udocker clone --name=myclone ${CONT_ID}; return=$?
+STRING="T026: kooker clone --name=myclone ${CONT_ID}"
+kooker clone --name=myclone ${CONT_ID}; return=$?
 result
 
-STRING="T027: udocker export -o myexportcont.tar ${CONT_ID}"
+STRING="T027: kooker export -o myexportcont.tar ${CONT_ID}"
 chmod -R u+x ${DEFAULT_UDIR}/containers/${CONT_ID}/ROOT
-udocker export -o myexportcont.tar ${CONT_ID}; return=$?
+kooker export -o myexportcont.tar ${CONT_ID}; return=$?
 result
 
-STRING="T028: udocker rm ${CONT_ID}"
-udocker rm ${CONT_ID}; return=$?
+STRING="T028: kooker rm ${CONT_ID}"
+kooker rm ${CONT_ID}; return=$?
 result
 
-STRING="T029: udocker setup ${CONT}"
-udocker setup ${CONT}; return=$?
+STRING="T029: kooker setup ${CONT}"
+kooker setup ${CONT}; return=$?
 result
 
 rm -Rf "${TEST_UDIR}" > /dev/null 2>&1
 
-STRING="T030: udocker mkrepo ${TEST_UDIR}"
-udocker mkrepo ${TEST_UDIR}; return=$?
+STRING="T030: kooker mkrepo ${TEST_UDIR}"
+kooker mkrepo ${TEST_UDIR}; return=$?
 result
 
-STRING="T031: udocker --repo=${TEST_UDIR} pull ${DOCKER_IMG}"
-udocker --repo=${TEST_UDIR} pull ${DOCKER_IMG}; return=$?
+STRING="T031: kooker --repo=${TEST_UDIR} pull ${DOCKER_IMG}"
+kooker --repo=${TEST_UDIR} pull ${DOCKER_IMG}; return=$?
 result
 
-STRING="T032: udocker --repo=${TEST_UDIR} verify ${DOCKER_IMG}"
-udocker --repo=${TEST_UDIR} verify ${DOCKER_IMG}; return=$?
+STRING="T032: kooker --repo=${TEST_UDIR} verify ${DOCKER_IMG}"
+kooker --repo=${TEST_UDIR} verify ${DOCKER_IMG}; return=$?
 result
 
-STRING="T033: UDOCKER_DIR=${TEST_UDIR} udocker verify ${DOCKER_IMG}"
-UDOCKER_DIR=${TEST_UDIR} udocker verify ${DOCKER_IMG}; return=$?
+STRING="T033: KOOKER_DIR=${TEST_UDIR} kooker verify ${DOCKER_IMG}"
+KOOKER_DIR=${TEST_UDIR} kooker verify ${DOCKER_IMG}; return=$?
 result
 
 rm -f ${TAR_IMAGE} > /dev/null 2>&1
@@ -270,24 +270,24 @@ echo "Download a docker tar img file ${TAR_IMAGE_URL}"
 wget --no-check-certificate ${TAR_IMAGE_URL}
 echo "|______________________________________________________________________________|"
 
-STRING="T034: udocker load -i ${TAR_IMAGE}"
-udocker load -i ${TAR_IMAGE}; return=$?
+STRING="T034: kooker load -i ${TAR_IMAGE}"
+kooker load -i ${TAR_IMAGE}; return=$?
 result
 
-STRING="T035: udocker protect ${CONT} (container)"
-udocker protect ${CONT}; return=$?
+STRING="T035: kooker protect ${CONT} (container)"
+kooker protect ${CONT}; return=$?
 result
 
-STRING="T036: udocker rm ${CONT} (try to remove protected container)"
-udocker rm ${CONT}; return=$?
+STRING="T036: kooker rm ${CONT} (try to remove protected container)"
+kooker rm ${CONT}; return=$?
 result_inv
 
-STRING="T037: udocker unprotect ${CONT} (container)"
-udocker unprotect ${CONT}; return=$?
+STRING="T037: kooker unprotect ${CONT} (container)"
+kooker unprotect ${CONT}; return=$?
 result
 
-STRING="T038: udocker rm ${CONT} (try to remove unprotected container)"
-udocker rm ${CONT}; return=$?
+STRING="T038: kooker rm ${CONT} (try to remove unprotected container)"
+kooker rm ${CONT}; return=$?
 result
 
 rm -f ${TAR_CONT} > /dev/null 2>&1
@@ -295,78 +295,78 @@ echo "Download a docker tar container file ${TAR_CONT_URL}"
 wget --no-check-certificate ${TAR_CONT_URL}
 echo "|______________________________________________________________________________|"
 
-STRING="T039: udocker import ${TAR_CONT} mycentos1:latest"
-udocker import ${TAR_CONT} mycentos1:latest; return=$?
+STRING="T039: kooker import ${TAR_CONT} mycentos1:latest"
+kooker import ${TAR_CONT} mycentos1:latest; return=$?
 result
 
-STRING="T040: udocker import --tocontainer --name=mycont ${TAR_CONT}"
-udocker import --tocontainer --name=mycont ${TAR_CONT}; return=$?
+STRING="T040: kooker import --tocontainer --name=mycont ${TAR_CONT}"
+kooker import --tocontainer --name=mycont ${TAR_CONT}; return=$?
 result
 
-STRING="T041: udocker import --clone --name=clone_cont ${TAR_CONT}"
-udocker import --clone --name=clone_cont ${TAR_CONT}; return=$?
+STRING="T041: kooker import --clone --name=clone_cont ${TAR_CONT}"
+kooker import --clone --name=clone_cont ${TAR_CONT}; return=$?
 result
 
-STRING="T042: udocker rmi ${DOCKER_IMG}"
-udocker rmi ${DOCKER_IMG}; return=$?
+STRING="T042: kooker rmi ${DOCKER_IMG}"
+kooker rmi ${DOCKER_IMG}; return=$?
 result
 
-STRING="T043: udocker ps -m"
-udocker ps -m; return=$?
+STRING="T043: kooker ps -m"
+kooker ps -m; return=$?
 result
 
-STRING="T044: udocker ps -s -m"
-udocker ps -s -m; return=$?
+STRING="T044: kooker ps -s -m"
+kooker ps -s -m; return=$?
 result
 
-STRING="T045: udocker images -l"
-udocker images -l; return=$?
+STRING="T045: kooker images -l"
+kooker images -l; return=$?
 result
 
-STRING="T046: udocker pull docker.io/python:3-slim <REGRESSION test for issue #359>"
-udocker pull docker.io/python:3-slim; return=$?
+STRING="T046: kooker pull docker.io/python:3-slim <REGRESSION test for issue #359>"
+kooker pull docker.io/python:3-slim; return=$?
 result
 
-STRING="T047: udocker create --name=py3slim docker.io/python:3-slim <REGRESSION test for issue #359>"
-udocker create --name=py3slim docker.io/python:3-slim; return=$?
+STRING="T047: kooker create --name=py3slim docker.io/python:3-slim <REGRESSION test for issue #359>"
+kooker create --name=py3slim docker.io/python:3-slim; return=$?
 result
 
-STRING="T048: udocker run py3slim python3 --version <REGRESSION test for issue #359>"
-udocker run py3slim python3 --version; return=$?
+STRING="T048: kooker run py3slim python3 --version <REGRESSION test for issue #359>"
+kooker run py3slim python3 --version; return=$?
 result
 
-STRING="T049: udocker pull public.ecr.aws/docker/library/redis <REGRESSION test for issue #168>"
-udocker pull public.ecr.aws/docker/library/redis; return=$?
+STRING="T049: kooker pull public.ecr.aws/docker/library/redis <REGRESSION test for issue #168>"
+kooker pull public.ecr.aws/docker/library/redis; return=$?
 result
 
-STRING="T050: udocker create --name=redis public.ecr.aws/docker/library/redis <REGRESSION test for issue #168>"
-udocker create --name=redis public.ecr.aws/docker/library/redis; return=$?
+STRING="T050: kooker create --name=redis public.ecr.aws/docker/library/redis <REGRESSION test for issue #168>"
+kooker create --name=redis public.ecr.aws/docker/library/redis; return=$?
 result
 
-STRING="T051: udocker run redis redis-server --version <REGRESSION test for issue #168>"
-udocker run redis redis-server --version; return=$?
+STRING="T051: kooker run redis redis-server --version <REGRESSION test for issue #168>"
+kooker run redis redis-server --version; return=$?
 result
 
-STRING="T052: udocker login --username=username --password=password"
-udocker login --username=username --password=password; return=$?
+STRING="T052: kooker login --username=username --password=password"
+kooker login --username=username --password=password; return=$?
 result
 
-STRING="T053: udocker logout -a"
-udocker logout -a; return=$?
+STRING="T053: kooker logout -a"
+kooker logout -a; return=$?
 result
 
 # Cleanup files containers and images used in the tests
 echo "Clean up files containers and images used in the tests"
 rm -rf myexportcont.tar "${TEST_UDIR}" "${TAR_IMAGE}" "${TAR_CONT}" > /dev/null 2>&1
-udocker rm mycont
-udocker rm clone_cont
-udocker rm myclone
-udocker rm py3slim
-udocker rm redis
-udocker rmi mycentos1
-udocker rmi centos:7
-udocker rmi docker.io/python:3-slim
-udocker rmi public.ecr.aws/docker/library/redis
+kooker rm mycont
+kooker rm clone_cont
+kooker rm myclone
+kooker rm py3slim
+kooker rm redis
+kooker rmi mycentos1
+kooker rmi centos:7
+kooker rmi docker.io/python:3-slim
+kooker rmi public.ecr.aws/docker/library/redis
 echo "|______________________________________________________________________________|"
 
 # Report failed tests

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-udocker unit tests: Uenv
+kooker unit tests: Uenv
 """
 
 from unittest import TestCase, main
-from udocker.utils.uenv import Uenv
+from kooker.utils.uenv import Uenv
 import collections
 
 collections.Callable = collections.abc.Callable

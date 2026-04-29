@@ -6,7 +6,7 @@
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
 #init-hook=
-init-hook='import sys; sys.path.append("udocker"); sys.path.append(".");'
+init-hook='import sys; sys.path.append("kooker"); sys.path.append(".");'
 
 # Files or directories to be skipped. They should be base names, not
 # paths.
@@ -590,5 +590,5 @@ check-str-concat-over-line-jumps=no
 #max-line-length-suggestions=
 
 [MASTER]
-init-hook='import sys; sys.path.append("udocker"); sys.path.append(".");'
+init-hook='import sys; sys.path.append("kooker"); sys.path.append(".");'
 

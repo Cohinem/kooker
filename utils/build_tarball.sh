@@ -2,7 +2,7 @@
 
 # ##################################################################
 #
-# Build binaries and create the udocker-englib tarball
+# Build binaries and create the kooker-englib tarball
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
 #
 # ##################################################################
 
-# The tarball containing the build binaries for udocker is
+# The tarball containing the build binaries for kooker is
 # maintained separately and has its own version. Each release of
-# udocker requires a tarball that is equal or greater than a given
+# kooker requires a tarball that is equal or greater than a given
 # base version.
-# i.e. udocker 1.3.0 requires a tarball >= 1.2.8
+# i.e. kooker 1.3.0 requires a tarball >= 1.2.8
 
-# This script produces the following udocker-englib tarball
+# This script produces the following kooker-englib tarball
 
 DEVEL3=$(realpath "$0" | grep -E "devel3|devel4")
 
@@ -34,14 +34,14 @@ TARBALL_VERSION_P2="1.1.11"
 sanity_check() 
 {
     echo "sanity_check"
-    local udocker_script
+    local kooker_script
     if [ -n "$DEVEL3" ]; then
-        udocker_script="$REPO_DIR/udocker/maincmd.py"
+        kooker_script="$REPO_DIR/kooker/maincmd.py"
     else
-	udocker_script="$REPO_DIR/udocker.py"
+	kooker_script="$REPO_DIR/kooker.py"
     fi
-    if [ ! -f "$udocker_script" ] ; then
-        echo "$udocker_script not found aborting"
+    if [ ! -f "$kooker_script" ] ; then
+        echo "$kooker_script not found aborting"
         exit 1
     fi
 
@@ -64,26 +64,26 @@ get_proot_static()
     /bin/rm -Rf "$BUILD_DIR/proot-static-build/.git"
 }
 
-get_udocker_static()
+get_kooker_static()
 {
     local BUILD_VERSION="$1"
 
-    echo "get_udocker_tools"
+    echo "get_kooker_tools"
     cd "$BUILD_DIR" || exit 1
 
     if [ -d "$BUILD_DIR/proot-static-build/static" ] ; then
-	echo "udocker build directory already exists: $BUILD_DIR/proot-static-build"
+	echo "kooker build directory already exists: $BUILD_DIR/proot-static-build"
 	return
     fi
     /bin/mkdir -p "$BUILD_DIR/proot-static-build/static"
 
-    curl "https://raw.githubusercontent.com/jorge-lip/udocker-builds/master/tarballs/udocker-englib-${BUILD_VERSION}.tar.gz" > \
-	"$BUILD_DIR/proot-static-build/udocker-englib.tar.gz"
-    (cd "$BUILD_DIR/proot-static-build"; tar xvf udocker-englib.tar.gz)
-    (cd "$BUILD_DIR/proot-static-build"; /bin/mv udocker_dir/bin/proot-x86-4_8_0 static/proot-x86)
-    (cd "$BUILD_DIR/proot-static-build"; /bin/mv udocker_dir/bin/proot-x86_64-4_8_0 static/proot-x86_64)
-    (cd "$BUILD_DIR/proot-static-build"; /bin/mv udocker_dir/bin/proot-arm static/proot-arm)
-    (cd "$BUILD_DIR/proot-static-build"; /bin/mv udocker_dir/bin/proot-arm64-4_8_0 static/proot-arm64)
+    curl "https://raw.githubusercontent.com/jorge-lip/kooker-builds/master/tarballs/kooker-englib-${BUILD_VERSION}.tar.gz" > \
+	"$BUILD_DIR/proot-static-build/kooker-englib.tar.gz"
+    (cd "$BUILD_DIR/proot-static-build"; tar xvf kooker-englib.tar.gz)
+    (cd "$BUILD_DIR/proot-static-build"; /bin/mv kooker_dir/bin/proot-x86-4_8_0 static/proot-x86)
+    (cd "$BUILD_DIR/proot-static-build"; /bin/mv kooker_dir/bin/proot-x86_64-4_8_0 static/proot-x86_64)
+    (cd "$BUILD_DIR/proot-static-build"; /bin/mv kooker_dir/bin/proot-arm static/proot-arm)
+    (cd "$BUILD_DIR/proot-static-build"; /bin/mv kooker_dir/bin/proot-arm64-4_8_0 static/proot-arm64)
     chmod u+rx "$BUILD_DIR/proot-static-build/static/*"
 }
 
@@ -118,22 +118,22 @@ prepare_proot_source()
     fi
 
     #git clone --branch v5.1.0 --depth=1 https://github.com/proot-me/PRoot 
-    #git clone --branch udocker-2 --depth=1 https://github.com/jorge-lip/proot-udocker.git
+    #git clone --branch kooker-2 --depth=1 https://github.com/jorge-lip/proot-kooker.git
 
-    git clone --branch udocker-1 https://github.com/jorge-lip/proot-udocker.git
+    git clone --branch kooker-1 https://github.com/jorge-lip/proot-kooker.git
 
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/.git
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/static/care*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/care*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/cpio*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/glib*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/libarchive*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/lzo*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/zlib*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/proot*
-    #/bin/rm -Rf $BUILD_DIR/proot-udocker/packages/uthash-master*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/.git
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/static/care*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/care*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/cpio*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/glib*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/libarchive*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/lzo*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/zlib*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/proot*
+    #/bin/rm -Rf $BUILD_DIR/proot-kooker/packages/uthash-master*
 
-    /bin/mv proot-udocker "$PROOT_SOURCE_DIR"
+    /bin/mv proot-kooker "$PROOT_SOURCE_DIR"
 }
 
 prepare_patchelf_source_v1()
@@ -147,9 +147,9 @@ prepare_patchelf_source_v1()
         return
     fi
 
-    git clone --branch udocker-1 --depth=1 https://github.com/jorge-lip/patchelf-udocker.git
-    /bin/rm -Rf "$BUILD_DIR/patchelf-udocker/.git"
-    /bin/mv patchelf-udocker "$PATCHELF_SOURCE_DIR"
+    git clone --branch kooker-1 --depth=1 https://github.com/jorge-lip/patchelf-kooker.git
+    /bin/rm -Rf "$BUILD_DIR/patchelf-kooker/.git"
+    /bin/mv patchelf-kooker "$PATCHELF_SOURCE_DIR"
 }
 
 prepare_patchelf_source_v2()
@@ -163,9 +163,9 @@ prepare_patchelf_source_v2()
         return
     fi
 
-    git clone --branch udocker-2 --depth=1 https://github.com/jorge-lip/patchelf-udocker-2.git
-    /bin/rm -Rf "$BUILD_DIR/patchelf-udocker-2/.git"
-    /bin/mv patchelf-udocker-2 "$PATCHELF_SOURCE_DIR"
+    git clone --branch kooker-2 --depth=1 https://github.com/jorge-lip/patchelf-kooker-2.git
+    /bin/rm -Rf "$BUILD_DIR/patchelf-kooker-2/.git"
+    /bin/mv patchelf-kooker-2 "$PATCHELF_SOURCE_DIR"
 }
 
 prepare_fakechroot_glibc_source()
@@ -180,10 +180,10 @@ prepare_fakechroot_glibc_source()
     fi
 
     #git clone --depth=1 --branch 2.18 https://github.com/dex4er/fakechroot.git
-    git clone --branch udocker-3 --depth=1 \
-        https://github.com/jorge-lip/libfakechroot-glibc-udocker.git
-    /bin/rm -Rf "$BUILD_DIR/libfakechroot-glibc-udocker/.git"
-    /bin/mv libfakechroot-glibc-udocker "$FAKECHROOT_SOURCE_DIR"
+    git clone --branch kooker-3 --depth=1 \
+        https://github.com/jorge-lip/libfakechroot-glibc-kooker.git
+    /bin/rm -Rf "$BUILD_DIR/libfakechroot-glibc-kooker/.git"
+    /bin/mv libfakechroot-glibc-kooker "$FAKECHROOT_SOURCE_DIR"
 }
 
 prepare_fakechroot_musl_source()
@@ -198,10 +198,10 @@ prepare_fakechroot_musl_source()
     fi
 
     #git clone --depth=1 --branch 2.18 https://github.com/dex4er/fakechroot.git
-    git clone --branch udocker-4 --depth=1 \
-        https://github.com/jorge-lip/libfakechroot-musl-udocker.git
-    /bin/rm -Rf "$BUILD_DIR/libfakechroot-musl-udocker/.git"
-    /bin/mv libfakechroot-musl-udocker "$FAKECHROOT_SOURCE_DIR"
+    git clone --branch kooker-4 --depth=1 \
+        https://github.com/jorge-lip/libfakechroot-musl-kooker.git
+    /bin/rm -Rf "$BUILD_DIR/libfakechroot-musl-kooker/.git"
+    /bin/mv libfakechroot-musl-kooker "$FAKECHROOT_SOURCE_DIR"
 }
 
 prepare_runc_source()
@@ -255,35 +255,35 @@ prepare_package()
     echo "prepare_package"
     cd "$BUILD_DIR" || exit 1
     if [ "$1" = "ERASE" ] ; then 
-        /bin/rm -f "${PACKAGE_DIR}"/udocker_dir/bin/*
-        /bin/rm -f "${PACKAGE_DIR}"/udocker_dir/lib/*
-        /bin/rm -f "${PACKAGE_DIR}"/udocker_dir/doc/*
-        /bin/rm -f "${PACKAGE_DIR}"/udocker_dir/*
+        /bin/rm -f "${PACKAGE_DIR}"/kooker_dir/bin/*
+        /bin/rm -f "${PACKAGE_DIR}"/kooker_dir/lib/*
+        /bin/rm -f "${PACKAGE_DIR}"/kooker_dir/doc/*
+        /bin/rm -f "${PACKAGE_DIR}"/kooker_dir/*
     fi	
     if [ ! -d "${PACKAGE_DIR}" ] ; then
         /bin/mkdir -p "${PACKAGE_DIR}"
-        /bin/mkdir -p "${PACKAGE_DIR}/udocker_dir/bin"
-        /bin/mkdir -p "${PACKAGE_DIR}/udocker_dir/lib"
-        /bin/mkdir -p "${PACKAGE_DIR}/udocker_dir/doc"
+        /bin/mkdir -p "${PACKAGE_DIR}/kooker_dir/bin"
+        /bin/mkdir -p "${PACKAGE_DIR}/kooker_dir/lib"
+        /bin/mkdir -p "${PACKAGE_DIR}/kooker_dir/doc"
     fi
 }
 
-addto_package_udocker()
+addto_package_kooker()
 {
     if [ -z "$DEVEL3" ]; then
-        echo "addto_package_udocker: add udocker for Python2"
-        /bin/cp -f -L  "${REPO_DIR}/udocker.py"  "${PACKAGE_DIR}/udocker"
-        (cd "${PACKAGE_DIR}"; /bin/ln -s udocker udocker.py)
+        echo "addto_package_kooker: add kooker for Python2"
+        /bin/cp -f -L  "${REPO_DIR}/kooker.py"  "${PACKAGE_DIR}/kooker"
+        (cd "${PACKAGE_DIR}"; /bin/ln -s kooker kooker.py)
     else
-	/bin/rm -f "${PACKAGE_DIR}/udocker"
-	/bin/rm -f "${PACKAGE_DIR}/udocker.py"
+	/bin/rm -f "${PACKAGE_DIR}/kooker"
+	/bin/rm -f "${PACKAGE_DIR}/kooker.py"
     fi
 }
 
 addto_package_simplejson()
 {
     echo "addto_package_simplejson"
-    cd "${PACKAGE_DIR}/udocker_dir/lib" || exit 1
+    cd "${PACKAGE_DIR}/kooker_dir/lib" || exit 1
 
     if [ -d "simplejson" ] ; then
         echo "simplejson already exists: $PACKAGE_DIR/simplejson"
@@ -300,21 +300,21 @@ addto_package_simplejson()
 addto_package_other()
 {
     echo "addto_package_other"
-    /bin/cp -f "${REPO_DIR}/LICENSE"                       "${PACKAGE_DIR}/udocker_dir/doc/LICENSE.udocker"
-    /bin/cp -f "${REPO_DIR}/README.md"                     "${PACKAGE_DIR}/udocker_dir/doc/"
-    /bin/cp -f "${REPO_DIR}/CHANGELOG.md"                  "${PACKAGE_DIR}/udocker_dir/doc/"
-    /bin/cp -R "${REPO_DIR}/docs/udocker.1"                "${PACKAGE_DIR}/udocker_dir/doc/"
-    /bin/cp -R "${REPO_DIR}/docs/installation_manual.md"   "${PACKAGE_DIR}/udocker_dir/doc/"
-    /bin/cp -R "${REPO_DIR}/docs/reference_card.md"        "${PACKAGE_DIR}/udocker_dir/doc/"
-    /bin/cp -R "${REPO_DIR}/docs/user_manual.md"           "${PACKAGE_DIR}/udocker_dir/doc/"
+    /bin/cp -f "${REPO_DIR}/LICENSE"                       "${PACKAGE_DIR}/kooker_dir/doc/LICENSE.kooker"
+    /bin/cp -f "${REPO_DIR}/README.md"                     "${PACKAGE_DIR}/kooker_dir/doc/"
+    /bin/cp -f "${REPO_DIR}/CHANGELOG.md"                  "${PACKAGE_DIR}/kooker_dir/doc/"
+    /bin/cp -R "${REPO_DIR}/docs/kooker.1"                "${PACKAGE_DIR}/kooker_dir/doc/"
+    /bin/cp -R "${REPO_DIR}/docs/installation_manual.md"   "${PACKAGE_DIR}/kooker_dir/doc/"
+    /bin/cp -R "${REPO_DIR}/docs/reference_card.md"        "${PACKAGE_DIR}/kooker_dir/doc/"
+    /bin/cp -R "${REPO_DIR}/docs/user_manual.md"           "${PACKAGE_DIR}/kooker_dir/doc/"
 
     /bin/cp -f "${REPO_DIR}/ansible_install.yaml"          "${PACKAGE_DIR}/"
     /bin/cp -f "${REPO_DIR}/setup.py"                      "${PACKAGE_DIR}/"
 
-    #/bin/cp -f "${S_PROOT_DIR}/proot-x86"                 "${PACKAGE_DIR}/udocker_dir/bin/"
-    #/bin/cp -f "${S_PROOT_DIR}/proot-x86_64"              "${PACKAGE_DIR}/udocker_dir/bin/"
-    /bin/cp -f "${S_PROOT_DIR}/proot-arm"                 "${PACKAGE_DIR}/udocker_dir/bin/"
-    #/bin/cp -f "${S_PROOT_DIR}/proot-arm64"               "${PACKAGE_DIR}/udocker_dir/bin/"
+    #/bin/cp -f "${S_PROOT_DIR}/proot-x86"                 "${PACKAGE_DIR}/kooker_dir/bin/"
+    #/bin/cp -f "${S_PROOT_DIR}/proot-x86_64"              "${PACKAGE_DIR}/kooker_dir/bin/"
+    /bin/cp -f "${S_PROOT_DIR}/proot-arm"                 "${PACKAGE_DIR}/kooker_dir/bin/"
+    #/bin/cp -f "${S_PROOT_DIR}/proot-arm64"               "${PACKAGE_DIR}/kooker_dir/bin/"
 }
 
 # #############################################################################
@@ -402,7 +402,7 @@ fedora25_build_proot()
         #PROOT="$S_PROOT_DIR/proot-x86 -q qemu-i386"
         PROOT="$S_PROOT_DIR/proot-x86"
     elif [ "$OS_ARCH" = "x86_64" ]; then
-        #PROOT="$HOME/.udocker/bin/proot-x86_64"
+        #PROOT="$HOME/.kooker/bin/proot-x86_64"
 	PROOT="$S_PROOT_DIR/proot-x86_64"
     else
         echo "unsupported $OS_NAME architecture: $OS_ARCH"
@@ -4014,7 +4014,7 @@ centos7_build_proot()
         #PROOT="$S_PROOT_DIR/proot-x86"
         PROOT="$BUILD_DIR/proot-source-x86_64/proot-Fedora-30.bin"
     elif [ "$OS_ARCH" = "x86_64" ]; then
-        #PROOT="$HOME/.udocker/bin/proot-x86_64"
+        #PROOT="$HOME/.kooker/bin/proot-x86_64"
         PROOT="$BUILD_DIR/proot-source-x86_64/proot-Fedora-30.bin"
     elif [ "$OS_ARCH" = "aarch64" ]; then
         #PROOT="$S_PROOT_DIR/proot-x86_64 -q qemu-aarch64"
@@ -7315,7 +7315,7 @@ debian10_build_proot()
         #PROOT="$S_PROOT_DIR/proot-x86"
         PROOT="$BUILD_DIR/proot-source-x86/proot-Fedora-30.bin"
     elif [ "$OS_ARCH" = "x86_64" ]; then
-        #PROOT="$HOME/.udocker/bin/proot-x86_64"
+        #PROOT="$HOME/.kooker/bin/proot-x86_64"
         PROOT="$BUILD_DIR/proot-source-x86_64/proot-Fedora-30.bin"
     elif [ "$OS_ARCH" = "aarch64" ]; then
         #PROOT="$S_PROOT_DIR/proot-x86_64 -q qemu-aarch64"
@@ -8950,7 +8950,7 @@ ostree_delete()
 copy_file()
 {
     local SOURCE_FILE="${BUILD_DIR}/${1}"
-    local TARGET_FILE="${PACKAGE_DIR}/udocker_dir/${2}"
+    local TARGET_FILE="${PACKAGE_DIR}/kooker_dir/${2}"
     if [ ! -f "$SOURCE_FILE" ] ; then
         echo "ERROR: copy_file file not found : $SOURCE_FILE"
         exit 1
@@ -8964,7 +8964,7 @@ copy_file()
 
 link_file()
 {
-    local SOURCE_FILE="${PACKAGE_DIR}/udocker_dir/${1}"
+    local SOURCE_FILE="${PACKAGE_DIR}/kooker_dir/${1}"
     local TARGET_FILE="$2"
     if [ ! -f "$SOURCE_FILE" ] ; then
         echo "ERROR: link_file file not found : $SOURCE_FILE"
@@ -8991,10 +8991,10 @@ create_package_tarball()
 
     if [ -n "$DEVEL3" ] ; then
         echo "$TARBALL_VERSION_P3"
-        echo "$TARBALL_VERSION_P3" > "${PACKAGE_DIR}/udocker_dir/lib/VERSION"
+        echo "$TARBALL_VERSION_P3" > "${PACKAGE_DIR}/kooker_dir/lib/VERSION"
     else
         echo "$TARBALL_VERSION_P2"
-        echo "$TARBALL_VERSION_P2" > "${PACKAGE_DIR}/udocker_dir/lib/VERSION"
+        echo "$TARBALL_VERSION_P2" > "${PACKAGE_DIR}/kooker_dir/lib/VERSION"
     fi
 
     # documents ----------------------------------------------------------------------------------------------
@@ -9252,10 +9252,10 @@ create_package_tarball()
     # package ------------------------------------------------------------------------------------------------
     find "${PACKAGE_DIR}" -type d -exec /bin/chmod u=rwx,og=rx  {} \;
     find "${PACKAGE_DIR}" -type f -exec /bin/chmod u=+r+w,og=r  {} \;
-    find "${PACKAGE_DIR}/udocker_dir/bin" -type f -exec /bin/chmod u=rwx,og=rx  {} \;
+    find "${PACKAGE_DIR}/kooker_dir/bin" -type f -exec /bin/chmod u=rwx,og=rx  {} \;
     /bin/chmod u=rwx,og=rx "${PACKAGE_DIR}/setup.py"
-    [ -e "${PACKAGE_DIR}/udocker" ] && \
-        /bin/chmod u=rwx,og=rx "${PACKAGE_DIR}/udocker" 
+    [ -e "${PACKAGE_DIR}/kooker" ] && \
+        /bin/chmod u=rwx,og=rx "${PACKAGE_DIR}/kooker" 
     [ -e "${PACKAGE_DIR}/setup.py" ] && \
         /bin/chmod u=rwx,og=rx "${PACKAGE_DIR}/setup.py" 
 
@@ -9275,16 +9275,16 @@ REPO_DIR="$(dirname $utils_dir)"
 
 sanity_check
 
-BUILD_DIR="${HOME}/udocker-englib-${TARBALL_VERSION_P3}"
+BUILD_DIR="${HOME}/kooker-englib-${TARBALL_VERSION_P3}"
 S_PROOT_DIR="${BUILD_DIR}/proot-static-build/static"
 S_PROOT_PACKAGES_DIR="${BUILD_DIR}/proot-static-build/packages"
 PACKAGE_DIR="${BUILD_DIR}/package"
 #TALLOC_TAR="$BUILD_DIR/libtalloc/talloc.tar.gz"
 
 if [ -n "$DEVEL3" ]; then
-    TARBALL_FILE="${BUILD_DIR}/udocker-englib-${TARBALL_VERSION_P3}.tar.gz"
+    TARBALL_FILE="${BUILD_DIR}/kooker-englib-${TARBALL_VERSION_P3}.tar.gz"
 else
-    TARBALL_FILE="${BUILD_DIR}/udocker-${TARBALL_VERSION_P2}.tar.gz"
+    TARBALL_FILE="${BUILD_DIR}/kooker-${TARBALL_VERSION_P2}.tar.gz"
 fi
 
 [ ! -e "$BUILD_DIR" ] && /bin/mkdir -p "$BUILD_DIR"
@@ -9295,7 +9295,7 @@ fi
 
 #get_proot_static 
 
-get_udocker_static "1.2.10"
+get_kooker_static "1.2.10"
 
 get_libtalloc
 
@@ -9665,6 +9665,6 @@ nix_build_crun "x86_64" "${BUILD_DIR}/crun-source-x86_64"
 # #######
 #addto_package_simplejson
 addto_package_other
-addto_package_udocker
+addto_package_kooker
 create_package_tarball
 

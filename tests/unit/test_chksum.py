@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """
-udocker unit tests: ChkSUM
+kooker unit tests: ChkSUM
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch
-from udocker.utils.chksum import ChkSUM
+from kooker.utils.chksum import ChkSUM
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -21,8 +21,8 @@ class ChkSUMTestCase(TestCase):
     def tearDown(self):
         pass
 
-    @patch('udocker.utils.chksum.hashlib.sha512')
-    @patch('udocker.utils.chksum.hashlib.sha256')
+    @patch('kooker.utils.chksum.hashlib.sha512')
+    @patch('kooker.utils.chksum.hashlib.sha256')
     @patch.object(ChkSUM, '_openssl_sha512', autospec=True)
     @patch.object(ChkSUM, '_hashlib_sha512', autospec=True)
     @patch.object(ChkSUM, '_openssl_sha256', autospec=True)

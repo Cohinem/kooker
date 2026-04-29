@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-udocker unit tests: FileBind
+kooker unit tests: FileBind
 """
 
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
-from udocker.utils.filebind import FileBind
-from udocker.config import Config
+from kooker.utils.filebind import FileBind
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -19,7 +19,7 @@ class FileBindTestCase(TestCase):
         Config().getconf()
         self.bind_dir = "/.bind_host_files"
         self.orig_dir = "/.bind_orig_files"
-        str_local = 'udocker.container.localrepo.LocalRepository'
+        str_local = 'kooker.container.localrepo.LocalRepository'
         self.lrepo = patch(str_local)
         self.local = self.lrepo.start()
         self.mock_lrepo = Mock()
@@ -28,7 +28,7 @@ class FileBindTestCase(TestCase):
     def tearDown(self):
         self.lrepo.stop()
 
-    @patch('udocker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.os.path.realpath')
     def test_01_init(self, mock_realpath):
         """Test01 FileBind() constructor"""
         container_id = "CONTAINERID"
@@ -44,10 +44,10 @@ class FileBindTestCase(TestCase):
             fbind.container_orig_dir, fbind.container_dir + self.orig_dir)
         self.assertIsNone(fbind.host_bind_dir)
 
-    @patch('udocker.utils.filebind.Msg')
-    @patch('udocker.utils.filebind.os.path.isdir')
-    @patch('udocker.utils.filebind.os.path.realpath')
-    @patch('udocker.utils.filebind.FileUtil')
+    @patch('kooker.utils.filebind.Msg')
+    @patch('kooker.utils.filebind.os.path.isdir')
+    @patch('kooker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.FileUtil')
     def test_02_setup(self, mock_futil, mock_realpath, mock_isdir,
                       mock_msg):
         """Test02 FileBind().setup()."""
@@ -69,12 +69,12 @@ class FileBindTestCase(TestCase):
         status = FileBind(self.local, container_id).setup()
         self.assertFalse(status)
 
-    @patch('udocker.utils.filebind.os.path.isdir')
-    @patch('udocker.utils.filebind.os.path.islink')
-    @patch('udocker.utils.filebind.os.path.isfile')
-    @patch('udocker.utils.filebind.os.path.realpath')
-    @patch('udocker.utils.filebind.os.listdir')
-    @patch('udocker.utils.filebind.FileUtil')
+    @patch('kooker.utils.filebind.os.path.isdir')
+    @patch('kooker.utils.filebind.os.path.islink')
+    @patch('kooker.utils.filebind.os.path.isfile')
+    @patch('kooker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.os.listdir')
+    @patch('kooker.utils.filebind.FileUtil')
     def test_03_restore(self, mock_futil, mock_listdir,
                         mock_realpath, mock_isfile,
                         mock_islink, mock_isdir):
@@ -103,10 +103,10 @@ class FileBindTestCase(TestCase):
         self.assertTrue(mock_islink.called)
 
     @patch.object(FileBind, 'setup')
-    @patch('udocker.utils.filebind.FileUtil.mktmpdir')
-    @patch('udocker.utils.filebind.os.path.realpath')
-    @patch('udocker.utils.filebind.os.path.isfile')
-    @patch('udocker.utils.filebind.os.path.exists')
+    @patch('kooker.utils.filebind.FileUtil.mktmpdir')
+    @patch('kooker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.os.path.isfile')
+    @patch('kooker.utils.filebind.os.path.exists')
     def test_04_start(self, mock_exists, mock_isfile,
                       mock_realpath, mock_mktmp, mock_setup):
         """Test04 FileBind().start()."""
@@ -126,7 +126,7 @@ class FileBindTestCase(TestCase):
         self.assertTrue(mock_exists.called)
         self.assertIsInstance(fbind.start(files_list), tuple)
 
-    @patch('udocker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.os.path.realpath')
     @patch.object(FileBind, 'set_file')
     def test_05_set_list(self, mock_setfile, mock_realpath):
         """Test05 FileBind().set_list()."""
@@ -137,12 +137,12 @@ class FileBindTestCase(TestCase):
         FileBind(self.local, container_id).set_list(flist)
         self.assertTrue(mock_setfile.called)
 
-    @patch('udocker.utils.filebind.FileUtil.copyto')
-    @patch('udocker.utils.filebind.os.symlink')
-    @patch('udocker.utils.filebind.os.rename')
-    @patch('udocker.utils.filebind.os.path.exists')
-    @patch('udocker.utils.filebind.os.path.isfile')
-    @patch('udocker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.FileUtil.copyto')
+    @patch('kooker.utils.filebind.os.symlink')
+    @patch('kooker.utils.filebind.os.rename')
+    @patch('kooker.utils.filebind.os.path.exists')
+    @patch('kooker.utils.filebind.os.path.isfile')
+    @patch('kooker.utils.filebind.os.path.realpath')
     def test_06_set_file(self, mock_realpath, mock_isfile,
                          mock_exists, mock_rename, mock_sym,
                          mock_futilcopy):
@@ -172,9 +172,9 @@ class FileBindTestCase(TestCase):
         fbind.set_file(hfile, cfile)
         self.assertTrue(mock_futilcopy.called)
 
-    @patch('udocker.utils.filebind.FileUtil.remove')
-    @patch('udocker.utils.filebind.FileUtil.copyto')
-    @patch('udocker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.FileUtil.remove')
+    @patch('kooker.utils.filebind.FileUtil.copyto')
+    @patch('kooker.utils.filebind.os.path.realpath')
     def test_07_add_file(self, mock_realpath, mock_futilcp,
                          mock_futilrm):
         """Test07 FileBind().add_file()."""
@@ -188,7 +188,7 @@ class FileBindTestCase(TestCase):
         self.assertTrue(mock_futilrm.called)
         self.assertTrue(mock_futilcp.called)
 
-    @patch('udocker.utils.filebind.os.path.realpath')
+    @patch('kooker.utils.filebind.os.path.realpath')
     def test_08_get_path(self, mock_realpath):
         """Test08 FileBind().get_path()."""
         container_id = 'CONTAINERID'

@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 """
-udocker unit tests: Msg
+kooker unit tests: Msg
 """
 
 import sys
 from unittest import TestCase, main
 from unittest.mock import patch
 from io import StringIO
-from udocker.msg import Msg
+from kooker.msg import Msg
 import collections
 
 collections.Callable = collections.abc.Callable
 STDOUT = sys.stdout
 STDERR = sys.stderr
-UDOCKER_TOPDIR = "test_topdir"
+KOOKER_TOPDIR = "test_topdir"
 BUILTINS = "builtins"
 
 

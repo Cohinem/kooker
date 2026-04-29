@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 """
-udocker unit tests: ExecutionMode
+kooker unit tests: ExecutionMode
 """
 
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
-from udocker.engine.execmode import ExecutionMode
-from udocker.engine.proot import PRootEngine
-from udocker.engine.runc import RuncEngine
-from udocker.engine.fakechroot import FakechrootEngine
-from udocker.engine.singularity import SingularityEngine
-from udocker.config import Config
+from kooker.engine.execmode import ExecutionMode
+from kooker.engine.proot import PRootEngine
+from kooker.engine.runc import RuncEngine
+from kooker.engine.fakechroot import FakechrootEngine
+from kooker.engine.singularity import SingularityEngine
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -37,7 +37,7 @@ class ExecutionModeTestCase(TestCase):
         Config().conf['override_default_execution_modes'] = {"arm": "P2", }
         self.container_id = "CONTAINER_ID"
 
-        str_local = 'udocker.container.localrepo.LocalRepository'
+        str_local = 'kooker.container.localrepo.LocalRepository'
         self.lrepo = patch(str_local)
         self.local = self.lrepo.start()
         self.mock_lrepo = Mock()
@@ -64,8 +64,8 @@ class ExecutionModeTestCase(TestCase):
                          ("P1", "P2", "F1", "F2",
                           "F3", "F4", "R1", "R2", "R3", "S1"))
 
-    @patch('udocker.engine.execmode.HostInfo.arch')
-    @patch('udocker.engine.execmode.FileUtil.getdata')
+    @patch('kooker.engine.execmode.HostInfo.arch')
+    @patch('kooker.engine.execmode.FileUtil.getdata')
     def test_02_get_mode(self, mock_getdata, mock_arch):
         """Test02 ExecutionMode().get_mode."""
         Config().conf['override_default_execution_mode'] = "P2"
@@ -86,17 +86,17 @@ class ExecutionModeTestCase(TestCase):
         status = uexm.get_mode()
         self.assertEqual(status, "F3")
 
-    @patch('udocker.engine.execmode.Msg')
-    @patch('udocker.engine.execmode.os.path')
-    @patch('udocker.engine.execmode.FileUtil.putdata')
-    @patch('udocker.engine.execmode.FileBind.setup')
-    @patch('udocker.engine.execmode.ElfPatcher.get_ld_libdirs')
-    @patch('udocker.engine.execmode.FileUtil.links_conv')
-    @patch('udocker.engine.execmode.FileBind.restore')
-    @patch('udocker.engine.execmode.FileUtil.getdata')
-    @patch('udocker.engine.execmode.FileUtil')
-    @patch('udocker.engine.execmode.FileBind')
-    @patch('udocker.engine.execmode.ElfPatcher')
+    @patch('kooker.engine.execmode.Msg')
+    @patch('kooker.engine.execmode.os.path')
+    @patch('kooker.engine.execmode.FileUtil.putdata')
+    @patch('kooker.engine.execmode.FileBind.setup')
+    @patch('kooker.engine.execmode.ElfPatcher.get_ld_libdirs')
+    @patch('kooker.engine.execmode.FileUtil.links_conv')
+    @patch('kooker.engine.execmode.FileBind.restore')
+    @patch('kooker.engine.execmode.FileUtil.getdata')
+    @patch('kooker.engine.execmode.FileUtil')
+    @patch('kooker.engine.execmode.FileBind')
+    @patch('kooker.engine.execmode.ElfPatcher')
     @patch.object(ExecutionMode, 'get_mode')
     def test_03_set_mode(self, mock_getmode, mock_elfp, mock_fbind,
                          mock_futil, mock_getdata, mock_restore, mock_links,

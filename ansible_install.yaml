@@ -13,5 +13,5 @@
       apt: pkg=git,python-pip,python-setuptools,python-pycurl,findutils,tar state=installed update_cache=yes cache_valid_time=3600
       when: ansible_os_family == "Debian"
 
-    - name: pip install udocker
-      pip: name=git+https://github.com/indigo-dc/udocker editable=false
+    - name: pip install kooker
+      pip: name=git+https://github.com/indigo-dc/kooker editable=false

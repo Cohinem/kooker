@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-udocker unit tests: DockerLocalFileAPI
+kooker unit tests: DockerLocalFileAPI
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch, Mock
-from udocker.docker import DockerLocalFileAPI
-from udocker.config import Config
+from kooker.docker import DockerLocalFileAPI
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -17,7 +17,7 @@ class DockerLocalFileAPITestCase(TestCase):
 
     def setUp(self):
         Config().getconf()
-        str_local = 'udocker.container.localrepo.LocalRepository'
+        str_local = 'kooker.container.localrepo.LocalRepository'
         self.lrepo = patch(str_local)
         self.local = self.lrepo.start()
         self.mock_lrepo = Mock()
@@ -31,9 +31,9 @@ class DockerLocalFileAPITestCase(TestCase):
         dlocapi = DockerLocalFileAPI(self.local)
         self.assertEqual(dlocapi.localrepo, self.local)
 
-    @patch('udocker.docker.FileUtil.isfile')
-    @patch('udocker.docker.os.listdir')
-    @patch('udocker.docker.FileUtil.isdir')
+    @patch('kooker.docker.FileUtil.isfile')
+    @patch('kooker.docker.os.listdir')
+    @patch('kooker.docker.FileUtil.isdir')
     def test_02__load_structure(self, mock_isdir, mock_ldir, mock_isfile):
         """Test02 DockerLocalFileAPI()._load_structure()."""
         res = {'repoconfigs': {}, 'repolayers': {}}
@@ -152,8 +152,8 @@ class DockerLocalFileAPITestCase(TestCase):
         status = dlocapi._get_from_manifest(struc, imgtag)
         self.assertEqual(status, ("conf", ["l2", "l1"]))
 
-    @patch('udocker.docker.Msg')
-    @patch('udocker.docker.CommonLocalFileApi._move_layer_to_v1repo')
+    @patch('kooker.docker.Msg')
+    @patch('kooker.docker.CommonLocalFileApi._move_layer_to_v1repo')
     @patch.object(DockerLocalFileAPI, '_sorted_layers')
     @patch.object(DockerLocalFileAPI, '_find_top_layer_id')
     @patch.object(DockerLocalFileAPI, '_get_from_manifest')
@@ -195,7 +195,7 @@ class DockerLocalFileAPITestCase(TestCase):
         status = dlocapi._load_image_step2(struc, imgrepo, tag)
         self.assertEqual(status, [])
 
-    @patch('udocker.docker.CommonLocalFileApi._load_image')
+    @patch('kooker.docker.CommonLocalFileApi._load_image')
     def test_07__load_repositories(self, mock_loadi):
         """Test07 DockerLocalFileAPI()._load_repositories()."""
         struct = dict()
@@ -214,11 +214,11 @@ class DockerLocalFileAPITestCase(TestCase):
         status = dlocapi._load_repositories(structure)
         self.assertEqual(status, ["image:tag"])
 
-    @patch('udocker.docker.Msg')
+    @patch('kooker.docker.Msg')
     @patch.object(DockerLocalFileAPI, '_load_repositories')
     @patch.object(DockerLocalFileAPI, '_load_structure')
-    @patch('udocker.docker.CommonLocalFileApi._load_image')
-    @patch('udocker.docker.Unique')
+    @patch('kooker.docker.CommonLocalFileApi._load_image')
+    @patch('kooker.docker.Unique')
     def test_08_load(self, mock_unique, mock_loadimg,
                      mock_lstruct, mock_lrepo, mock_msg):
         """Test08 DockerLocalFileAPI().load()."""
@@ -250,14 +250,14 @@ class DockerLocalFileAPITestCase(TestCase):
         status = dlocapi.load(tmp_imgdir)
         self.assertEqual(status, ["repo1", "repo2"])
 
-    @patch('udocker.docker.FileUtil.putdata')
-    @patch('udocker.docker.CommonLocalFileApi.create_container_meta')
-    @patch('udocker.docker.FileUtil.copyto')
-    @patch('udocker.docker.FileUtil.mkdir')
-    @patch('udocker.docker.os.path.exists')
-    @patch('udocker.docker.os.path.basename')
-    @patch('udocker.docker.FileUtil.rename')
-    @patch('udocker.docker.ChkSUM.sha256')
+    @patch('kooker.docker.FileUtil.putdata')
+    @patch('kooker.docker.CommonLocalFileApi.create_container_meta')
+    @patch('kooker.docker.FileUtil.copyto')
+    @patch('kooker.docker.FileUtil.mkdir')
+    @patch('kooker.docker.os.path.exists')
+    @patch('kooker.docker.os.path.basename')
+    @patch('kooker.docker.FileUtil.rename')
+    @patch('kooker.docker.ChkSUM.sha256')
     def test_09__save_image(self, mock_sha256, mock_rename, mock_osbase,
                             mock_exists, mock_mkdir, mock_copyto,
                             mock_meta, mock_put):
@@ -331,12 +331,12 @@ class DockerLocalFileAPITestCase(TestCase):
         status = dlocapi._save_image(imgrepo, tag, struc, tmp_imgdir)
         self.assertTrue(status)
 
-    @patch('udocker.docker.Msg')
+    @patch('kooker.docker.Msg')
     @patch.object(DockerLocalFileAPI, '_save_image')
-    @patch('udocker.docker.FileUtil.remove')
-    @patch('udocker.docker.FileUtil.tar')
-    @patch('udocker.docker.os.makedirs')
-    @patch('udocker.docker.FileUtil.mktmp')
+    @patch('kooker.docker.FileUtil.remove')
+    @patch('kooker.docker.FileUtil.tar')
+    @patch('kooker.docker.os.makedirs')
+    @patch('kooker.docker.FileUtil.mktmp')
     def test_10_save(self, mock_mktmp, mock_mkdir, mock_tar,
                      mock_rm, mock_svimg, mock_msg):
         """Test10 DockerLocalFileAPI().save()."""

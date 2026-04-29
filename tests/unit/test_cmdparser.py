@@ -2,11 +2,11 @@
 
 # -*- coding: utf-8 -*-
 """
-udocker unit tests: CmdParser
+kooker unit tests: CmdParser
 """
 
 from unittest import TestCase, main
-from udocker.cmdparser import CmdParser
+from kooker.cmdparser import CmdParser
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -33,7 +33,7 @@ class CmdParserTestCase(TestCase):
     def test_02_parse(self):
         """Test02 CmdParser().parse()."""
         cmdp = CmdParser()
-        argv = ["udocker", "run", "--bindhome", "--hostauth", "--hostenv",
+        argv = ["kooker", "run", "--bindhome", "--hostauth", "--hostenv",
                 "-v", "/sys", "-v", "/proc", "-v", "/var/run", "-v", "/dev",
                 "--user=jorge", "--dri", "myfed", "firefox"]
         status = cmdp.parse(argv)
@@ -46,7 +46,7 @@ class CmdParserTestCase(TestCase):
     def test_03_missing_options(self):
         """Test03 CmdParser().missing_options()."""
         cmdp = CmdParser()
-        argv = ["udocker", "run", "--bindhome", "--hostauth", "--hostenv",
+        argv = ["kooker", "run", "--bindhome", "--hostauth", "--hostenv",
                 "-v", "/sys", "-v", "/proc", "-v", "/var/run", "-v", "/dev",
                 "--user=jorge", "--dri", "myfed", "firefox"]
         cmdp.parse(argv)
@@ -55,7 +55,7 @@ class CmdParserTestCase(TestCase):
 
     def test_04_get(self):
         """Test04 CmdParser().get()."""
-        argv = ["udocker", "--debug", "run", "--bindhome", "--hostauth",
+        argv = ["kooker", "--debug", "run", "--bindhome", "--hostauth",
                 "--hostenv", "-v", "/sys", "-v", "/proc", "-v",
                 "/var/run", "-v", "/dev", "--user=jorge", "--dri",
                 "myfed", "firefox"]
@@ -64,7 +64,7 @@ class CmdParserTestCase(TestCase):
         out = cmdp.get("xyz")
         self.assertIsNone(out)
 
-        argv = ["udocker", "--debug", "run", "--bindhome",
+        argv = ["kooker", "--debug", "run", "--bindhome",
                 "-v", "/sys", "--user=jorge", "--dri", "myfed", "firefox"]
         cmdp = CmdParser()
         cmdp.parse(argv)
@@ -75,7 +75,7 @@ class CmdParserTestCase(TestCase):
         out = cmdp.get("--bindhome", "CMD_OPT", True)
         self.assertEqual(out, [True])
 
-        argv = ["udocker", "export", "-o", "cont.tar", "12345"]
+        argv = ["kooker", "export", "-o", "cont.tar", "12345"]
         cmdp = CmdParser()
         cmdp.parse(argv)
         out = cmdp.get("", "CMD", True)

@@ -2,7 +2,7 @@
 
 # ##################################################################
 #
-# udocker high level testing
+# kooker high level testing
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,14 +35,14 @@ declare -a FAILED_TESTS
 
 if [ -n "$1" ]
 then
-  UDOCKER_CMD="$1"
+  KOOKER_CMD="$1"
 else
-  UDOCKER_CMD=$(type -p udocker)
+  KOOKER_CMD=$(type -p kooker)
 fi
 
-if [ ! -x "$UDOCKER_CMD" ]
+if [ ! -x "$KOOKER_CMD" ]
 then
-  echo "ERROR udocker file not executable: $UDOCKER_CMD"
+  echo "ERROR kooker file not executable: $KOOKER_CMD"
   exit 1
 fi
 
@@ -97,18 +97,18 @@ function result_inv
   echo "/                                                                                                                                    \ "
 }
 
-function udocker
+function kooker
 {
-   $PYTHON_CMD $UDOCKER_CMD $*
+   $PYTHON_CMD $KOOKER_CMD $*
 }
 
 echo "============================================="
-echo "* This script tests udocker run and options *"
+echo "* This script tests kooker run and options *"
 echo "* and volume mount options                  *"
 echo "============================================="
 
-DEFAULT_UDIR=$HOME/.udocker-tests
-export UDOCKER_DIR=${DEFAULT_UDIR}
+DEFAULT_UDIR=$HOME/.kooker-tests
+export KOOKER_DIR=${DEFAULT_UDIR}
 if [ -d ${DEFAULT_UDIR} ]
 then
   echo "ERROR test directory exists, remove first: ${DEFAULT_UDIR}"
@@ -116,240 +116,240 @@ then
 fi
 
 echo "\____________________________________________________________________________________________________________________________________/"
-udocker rm c7
-udocker rm ub22
-udocker rm jv
+kooker rm c7
+kooker rm ub22
+kooker rm jv
 
 ## Use openjdk:8-jdk-alpine for regression of issue #363
 
 echo "\____________________________________________________________________________________________________________________________________/"
-udocker rmi centos:7
-udocker rmi ubuntu:22.04
-udocker rmi openjdk:8-jdk-alpine
+kooker rmi centos:7
+kooker rmi ubuntu:22.04
+kooker rmi openjdk:8-jdk-alpine
 
 echo "\____________________________________________________________________________________________________________________________________/"
-udocker pull centos:7; return=$?
-udocker pull ubuntu:22.04; return=$?
-udocker pull openjdk:8-jdk-alpine; return=$?
+kooker pull centos:7; return=$?
+kooker pull ubuntu:22.04; return=$?
+kooker pull openjdk:8-jdk-alpine; return=$?
 
 echo "\____________________________________________________________________________________________________________________________________/"
-udocker images; return=$?
-udocker create --name=c7 centos:7; return=$?
-udocker create --name=ub22 ubuntu:22.04; return=$?
-udocker create --name=jv openjdk:8-jdk-alpine; return=$?
-udocker ps; return=$?
+kooker images; return=$?
+kooker create --name=c7 centos:7; return=$?
+kooker create --name=ub22 ubuntu:22.04; return=$?
+kooker create --name=jv openjdk:8-jdk-alpine; return=$?
+kooker ps; return=$?
 
 echo "===================="
-echo "* Test udocker run *"
+echo "* Test kooker run *"
 echo "===================="
 
 echo "===================================== execmode = P1"
-STRING="T001: udocker setup jv == execmode = P1"
-udocker setup jv; return=$?
+STRING="T001: kooker setup jv == execmode = P1"
+kooker setup jv; return=$?
 result
 
-STRING="T002: udocker run jv java -version == execmode = P1"
-udocker run --env="LANG=C" jv java -version; return=$?
+STRING="T002: kooker run jv java -version == execmode = P1"
+kooker run --env="LANG=C" jv java -version; return=$?
 result
 
-STRING="T003: udocker setup c7 == execmode = P1"
-udocker setup c7; return=$?
+STRING="T003: kooker setup c7 == execmode = P1"
+kooker setup c7; return=$?
 result
 
-STRING="T004: udocker run c7 ls --version == execmode = P1"
-udocker run c7 ls --version; return=$?
+STRING="T004: kooker run c7 ls --version == execmode = P1"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T005: udocker setup ub22 == execmode = P1"
-udocker setup ub22; return=$?
+STRING="T005: kooker setup ub22 == execmode = P1"
+kooker setup ub22; return=$?
 result
 
-STRING="T006: udocker run ub22 ls --version == execmode = P1"
-udocker run ub22 ls --version; return=$?
+STRING="T006: kooker run ub22 ls --version == execmode = P1"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = P2"
-STRING="T007: udocker setup --execmode=P2 jv == execmode = P2"
-udocker setup --execmode=P2 jv; return=$?
+STRING="T007: kooker setup --execmode=P2 jv == execmode = P2"
+kooker setup --execmode=P2 jv; return=$?
 result
 
-STRING="T008: udocker run jv java -version == execmode = P2"
-udocker run --env="LANG=C" jv java -version; return=$?
+STRING="T008: kooker run jv java -version == execmode = P2"
+kooker run --env="LANG=C" jv java -version; return=$?
 result
 
-STRING="T009: udocker setup --execmode=P2 c7 == execmode = P2"
-udocker setup --execmode=P2 c7; return=$?
+STRING="T009: kooker setup --execmode=P2 c7 == execmode = P2"
+kooker setup --execmode=P2 c7; return=$?
 result
 
-STRING="T010: udocker run c7 ls --version == execmode = P2"
-udocker run c7 ls --version; return=$?
+STRING="T010: kooker run c7 ls --version == execmode = P2"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T011: udocker setup --execmode=P2 ub22 == execmode = P2"
-udocker setup --execmode=P2 ub22; return=$?
+STRING="T011: kooker setup --execmode=P2 ub22 == execmode = P2"
+kooker setup --execmode=P2 ub22; return=$?
 result
 
-STRING="T012: udocker run ub22 ls --version == execmode = P2"
-udocker run ub22 ls --version; return=$?
+STRING="T012: kooker run ub22 ls --version == execmode = P2"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = F1"
-STRING="T013: udocker setup --execmode=F1 c7 == execmode = F1"
-udocker setup --execmode=F1 c7; return=$?
+STRING="T013: kooker setup --execmode=F1 c7 == execmode = F1"
+kooker setup --execmode=F1 c7; return=$?
 result
 
-STRING="T014: udocker run c7 ls --version == execmode = F1"
-udocker run c7 ls --version; return=$?
+STRING="T014: kooker run c7 ls --version == execmode = F1"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T015: udocker setup --execmode=F1 ub22 == execmode = F1"
-udocker setup --execmode=F1 ub22; return=$?
+STRING="T015: kooker setup --execmode=F1 ub22 == execmode = F1"
+kooker setup --execmode=F1 ub22; return=$?
 result
 
-STRING="T016: udocker run ub22 ls --version == execmode = F1"
-udocker run ub22 ls --version; return=$?
+STRING="T016: kooker run ub22 ls --version == execmode = F1"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = F2"
-STRING="T017: udocker setup --execmode=F2 c7 == execmode = F2"
-udocker setup --execmode=F2 c7; return=$?
+STRING="T017: kooker setup --execmode=F2 c7 == execmode = F2"
+kooker setup --execmode=F2 c7; return=$?
 result
 
-STRING="T018: udocker run c7 ls --version == execmode = F2"
-udocker run c7 ls --version; return=$?
+STRING="T018: kooker run c7 ls --version == execmode = F2"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T019: udocker setup --execmode=F2 ub22 == execmode = F2"
-udocker setup --execmode=F2 ub22; return=$?
+STRING="T019: kooker setup --execmode=F2 ub22 == execmode = F2"
+kooker setup --execmode=F2 ub22; return=$?
 result
 
-STRING="T020: udocker run ub22 ls --version == execmode = F2"
-udocker run ub22 ls --version; return=$?
+STRING="T020: kooker run ub22 ls --version == execmode = F2"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = F3"
-STRING="T021: udocker setup --execmode=F3 jv == execmode = F3"
-udocker setup --execmode=F3 jv; return=$?
+STRING="T021: kooker setup --execmode=F3 jv == execmode = F3"
+kooker setup --execmode=F3 jv; return=$?
 result
 
-STRING="T022: udocker run jv java -version == execmode = F3"
-udocker run --env="LANG=C" jv java -version; return=$?
+STRING="T022: kooker run jv java -version == execmode = F3"
+kooker run --env="LANG=C" jv java -version; return=$?
 result
 
-STRING="T023: udocker setup --execmode=F3 c7 == execmode = F3"
-udocker setup --execmode=F3 c7; return=$?
+STRING="T023: kooker setup --execmode=F3 c7 == execmode = F3"
+kooker setup --execmode=F3 c7; return=$?
 result
 
-STRING="T024: udocker run c7 ls --version == execmode = F3"
-udocker run c7 ls --version; return=$?
+STRING="T024: kooker run c7 ls --version == execmode = F3"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T025: udocker setup --execmode=F3 ub22 == execmode = F3"
-udocker setup --execmode=F3 ub22; return=$?
+STRING="T025: kooker setup --execmode=F3 ub22 == execmode = F3"
+kooker setup --execmode=F3 ub22; return=$?
 result
 
-STRING="T026: udocker run ub22 ls --version == execmode = F3"
-udocker run ub22 ls --version; return=$?
+STRING="T026: kooker run ub22 ls --version == execmode = F3"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = F4"
-STRING="T027: udocker setup --execmode=F4 jv == execmode = F4"
-udocker setup --execmode=F4 jv; return=$?
+STRING="T027: kooker setup --execmode=F4 jv == execmode = F4"
+kooker setup --execmode=F4 jv; return=$?
 result
 
-STRING="T028: udocker run jv java -version == execmode = F4"
-udocker run --env="LANG=C" jv java -version; return=$?
+STRING="T028: kooker run jv java -version == execmode = F4"
+kooker run --env="LANG=C" jv java -version; return=$?
 result
 
-STRING="T029: udocker setup --execmode=F4 c7 == execmode = F4"
-udocker setup --execmode=F4 c7; return=$?
+STRING="T029: kooker setup --execmode=F4 c7 == execmode = F4"
+kooker setup --execmode=F4 c7; return=$?
 result
 
-STRING="T030: udocker run c7 ls --version == execmode = F4"
-udocker run c7 ls --version; return=$?
+STRING="T030: kooker run c7 ls --version == execmode = F4"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T031: udocker setup --execmode=F4 ub22 == execmode = F4"
-udocker setup --execmode=F4 ub22; return=$?
+STRING="T031: kooker setup --execmode=F4 ub22 == execmode = F4"
+kooker setup --execmode=F4 ub22; return=$?
 result
 
-STRING="T032: udocker run ub22 ls --version == execmode = F4"
-udocker run ub22 ls --version; return=$?
+STRING="T032: kooker run ub22 ls --version == execmode = F4"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = R1"
-STRING="T033: udocker setup --execmode=R1 jv == execmode = R1"
-udocker setup --execmode=R1 jv; return=$?
+STRING="T033: kooker setup --execmode=R1 jv == execmode = R1"
+kooker setup --execmode=R1 jv; return=$?
 result
 
-STRING="T034: udocker run jv java -version == execmode = R1"
-udocker run --env="LANG=C" jv java -version; return=$?
+STRING="T034: kooker run jv java -version == execmode = R1"
+kooker run --env="LANG=C" jv java -version; return=$?
 result
 
-STRING="T035: udocker setup --execmode=R1 c7 == execmode = R1"
-udocker setup --execmode=R1 c7; return=$?
+STRING="T035: kooker setup --execmode=R1 c7 == execmode = R1"
+kooker setup --execmode=R1 c7; return=$?
 result
 
-STRING="T036: udocker run c7 ls --version == execmode = R1"
-udocker run c7 ls --version; return=$?
+STRING="T036: kooker run c7 ls --version == execmode = R1"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T037: udocker setup --execmode=R1 ub22 == execmode = R1"
-udocker setup --execmode=R1 ub22; return=$?
+STRING="T037: kooker setup --execmode=R1 ub22 == execmode = R1"
+kooker setup --execmode=R1 ub22; return=$?
 result
 
-STRING="T038: udocker run ub22 ls --version == execmode = R1"
-udocker run ub22 ls --version; return=$?
+STRING="T038: kooker run ub22 ls --version == execmode = R1"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = R2"
-STRING="T039: udocker setup --execmode=R2 jv == execmode = R2"
-udocker setup --execmode=R2 jv; return=$?
+STRING="T039: kooker setup --execmode=R2 jv == execmode = R2"
+kooker setup --execmode=R2 jv; return=$?
 result
 
-STRING="T040: udocker run jv java -version == execmode = R2"
-udocker run --env="LANG=C" jv java -version; return=$?
+STRING="T040: kooker run jv java -version == execmode = R2"
+kooker run --env="LANG=C" jv java -version; return=$?
 result
 
-STRING="T041: udocker setup --execmode=R2 c7 == execmode = R2"
-udocker setup --execmode=R2 c7; return=$?
+STRING="T041: kooker setup --execmode=R2 c7 == execmode = R2"
+kooker setup --execmode=R2 c7; return=$?
 result
 
-STRING="T042: udocker run c7 ls --version == execmode = R2"
-udocker run c7 ls --version; return=$?
+STRING="T042: kooker run c7 ls --version == execmode = R2"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T043: udocker setup --execmode=R2 ub22 == execmode = R2"
-udocker setup --execmode=R2 ub22; return=$?
+STRING="T043: kooker setup --execmode=R2 ub22 == execmode = R2"
+kooker setup --execmode=R2 ub22; return=$?
 result
 
-STRING="T044: udocker run ub22 ls --version == execmode = R2"
-udocker run ub22 ls --version; return=$?
+STRING="T044: kooker run ub22 ls --version == execmode = R2"
+kooker run ub22 ls --version; return=$?
 result
 
 echo "===================================== execmode = R3"
-STRING="T045: udocker setup --execmode=R3 jv == execmode = R3"
-udocker setup --execmode=R3 jv; return=$?
+STRING="T045: kooker setup --execmode=R3 jv == execmode = R3"
+kooker setup --execmode=R3 jv; return=$?
 result
 
-STRING="T046: udocker run jv java -version == execmode = R3"
-udocker run --env="LANG=C" jv java -version; return=$?
+STRING="T046: kooker run jv java -version == execmode = R3"
+kooker run --env="LANG=C" jv java -version; return=$?
 result
 
-STRING="T047: udocker setup --execmode=R3 c7 == execmode = R3"
-udocker setup --execmode=R3 c7; return=$?
+STRING="T047: kooker setup --execmode=R3 c7 == execmode = R3"
+kooker setup --execmode=R3 c7; return=$?
 result
 
-STRING="T048: udocker run c7 ls --version == execmode = R3"
-udocker run c7 ls --version; return=$?
+STRING="T048: kooker run c7 ls --version == execmode = R3"
+kooker run c7 ls --version; return=$?
 result
 
-STRING="T049: udocker setup --execmode=R3 ub22 == execmode = R3"
-udocker setup --execmode=R3 ub22; return=$?
+STRING="T049: kooker setup --execmode=R3 ub22 == execmode = R3"
+kooker setup --execmode=R3 ub22; return=$?
 result
 
-STRING="T050: udocker run ub22 ls --version == execmode = R3"
-udocker run ub22 ls --version; return=$?
+STRING="T050: kooker run ub22 ls --version == execmode = R3"
+kooker run ub22 ls --version; return=$?
 result
 
 # Report failed tests

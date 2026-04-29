@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 """
-udocker unit tests: Uprocess
+kooker unit tests: Uprocess
 """
 
 import subprocess
 from unittest import TestCase, main
 from unittest.mock import patch
-from udocker.utils.uprocess import Uprocess
-from udocker.config import Config
+from kooker.utils.uprocess import Uprocess
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -22,8 +22,8 @@ class UprocessTestCase(TestCase):
     def tearDown(self):
         pass
 
-    @patch('udocker.utils.uprocess.os.path.lexists')
-    @patch('udocker.utils.uprocess.os.path.basename')
+    @patch('kooker.utils.uprocess.os.path.lexists')
+    @patch('kooker.utils.uprocess.os.path.basename')
     def test_01_find_inpath(self, mock_base, mock_lexists):
         """Test01 Uprocess().find_inpath()."""
         fname = ''
@@ -40,7 +40,7 @@ class UprocessTestCase(TestCase):
         status = uproc.find_inpath(fname, path)
         self.assertEqual(status, '/bin/ls')
 
-    @patch('udocker.utils.uprocess.subprocess.Popen')
+    @patch('kooker.utils.uprocess.subprocess.Popen')
     def test_02__check_output(self, mock_popen):
         """Test02 Uprocess()._check_output()."""
         mock_popen.return_value.communicate.return_value = ("OUTPUT", None)
@@ -55,14 +55,14 @@ class UprocessTestCase(TestCase):
         self.assertRaises(subprocess.CalledProcessError,
                           uproc._check_output, "CMD")
 
-    @patch('udocker.utils.uprocess.subprocess.check_output')
+    @patch('kooker.utils.uprocess.subprocess.check_output')
     def test_03_check_output(self, mock_subp_chkout):
         """Test03 Uprocess().check_output()."""
         uproc = Uprocess()
         uproc.check_output("CMD")
         self.assertTrue(mock_subp_chkout.called)
 
-    @patch('udocker.utils.uprocess.Uprocess.check_output')
+    @patch('kooker.utils.uprocess.Uprocess.check_output')
     def test_04_get_output(self, mock_uproc_chkout):
         """Test04 Uprocess().get_output()."""
         mock_uproc_chkout.return_value = "OUTPUT"

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-udocker unit tests: Keystore
+kooker unit tests: Keystore
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch, mock_open
-from udocker.helper.keystore import KeyStore
-from udocker.config import Config
+from kooker.helper.keystore import KeyStore
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -28,9 +28,9 @@ class KeyStoreTestCase(TestCase):
         status = kstore.keystore_file
         self.assertEqual(status, "filename")
 
-    # @patch('udocker.helper.keystore.os.path.dirname')
-    # @patch('udocker.helper.keystore.HostInfo')
-    # @patch('udocker.helper.keystore.FileUtil')
+    # @patch('kooker.helper.keystore.os.path.dirname')
+    # @patch('kooker.helper.keystore.HostInfo')
+    # @patch('kooker.helper.keystore.FileUtil')
     # def test_02__verify_keystore(self, mock_futil, mock_hinfo, mock_pdir):
     #     """Test02 KeyStore()._verify_keystore()."""
     #     mock_futil.return_value.uid.return_value = 1000
@@ -40,7 +40,7 @@ class KeyStoreTestCase(TestCase):
     #     kstore._verify_keystore()
     #     self.assertTrue(mock_futil.uid.called)
 
-    @patch('udocker.helper.keystore.json.load')
+    @patch('kooker.helper.keystore.json.load')
     def test_03__read_all(self, mock_jload):
         """Test03 KeyStore()._read_all()."""
         url = u'https://xxx'
@@ -54,7 +54,7 @@ class KeyStoreTestCase(TestCase):
             self.assertEqual(status, credentials)
 
     @patch.object(KeyStore, '_verify_keystore')
-    @patch('udocker.helper.keystore.FileUtil.size')
+    @patch('kooker.helper.keystore.FileUtil.size')
     def test_04__shred(self, mock_size, mock_verks):
         """Test04 KeyStore()._shred()."""
         mock_verks.return_value = None
@@ -71,8 +71,8 @@ class KeyStoreTestCase(TestCase):
             self.assertEqual(status, 0)
 
     @patch.object(KeyStore, '_verify_keystore')
-    @patch('udocker.helper.keystore.json.dump')
-    @patch('udocker.helper.keystore.os.umask')
+    @patch('kooker.helper.keystore.json.dump')
+    @patch('kooker.helper.keystore.os.umask')
     def test_05__write_all(self, mock_umask, mock_jdump, mock_verks):
         """Test05 KeyStore()._write_all()."""
         url = u'https://xxx'
@@ -137,7 +137,7 @@ class KeyStoreTestCase(TestCase):
         status = kstore.delete(url)
         self.assertEqual(status, 0)
 
-    @patch('udocker.helper.keystore.os.unlink')
+    @patch('kooker.helper.keystore.os.unlink')
     @patch.object(KeyStore, '_verify_keystore')
     @patch.object(KeyStore, '_shred')
     def test_09_erase(self, mock_shred, mock_verks, mock_unlink):

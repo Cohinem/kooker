@@ -2,7 +2,7 @@
 
 # ##################################################################
 #
-# Make udocker tarball for release
+# Make kooker tarball for release
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,18 +19,18 @@
 # ##################################################################
 
 cd ..
-VER=`grep "__version__" udocker/__init__.py|cut -d'"' -f 2`
+VER=`grep "__version__" kooker/__init__.py|cut -d'"' -f 2`
 echo "==========================================================="
-echo "* This script produces udocker-${VER}.tar.gz, for release *"
+echo "* This script produces kooker-${VER}.tar.gz, for release *"
 echo "=========================================================="
 
 rm -rf `find . -name '*pycache*'` `find . -name '*.pyc'`
-mkdir -p udocker-${VER}
-cp -prv udocker udocker-${VER}/
-cd udocker-${VER}/udocker/
-ln -s maincmd.py udocker
+mkdir -p kooker-${VER}
+cp -prv kooker kooker-${VER}/
+cd kooker-${VER}/kooker/
+ln -s maincmd.py kooker
 cd ../../
 
-tar zcvf udocker-${VER}.tar.gz udocker-${VER}
+tar zcvf kooker-${VER}.tar.gz kooker-${VER}
 
-rm -rf udocker-${VER}
+rm -rf kooker-${VER}

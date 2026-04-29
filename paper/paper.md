@@ -1,6 +1,6 @@
 
 ---
-title: 'udocker: a user oriented tool for unprivileged Linux containers'
+title: 'kooker: a user oriented tool for unprivileged Linux containers'
 tags:
 
 - Python
@@ -51,10 +51,10 @@ bibliography: paper.bib
 # Summary
 
 Containers are increasingly used to package, distribute and run scientific software.
-udocker is a tool to enable execution of Linux containers in advanced computing
-environments. Distinctively from other tools, udocker is meant for easy deployment
+kooker is a tool to enable execution of Linux containers in advanced computing
+environments. Distinctively from other tools, kooker is meant for easy deployment
 and provides multiple execution engines to cope with different host environments.
-udocker can execute containers with or without using Linux namespaces. udocker is
+kooker can execute containers with or without using Linux namespaces. kooker is
 being used by a wide range of projects and research communities to facilitate the
 execution of Linux containers across heterogeneous computing environments.
 
@@ -71,54 +71,54 @@ the software needs to be adapted to the specificity of each resource. In this
 context Linux containers have gained interest as means to enable encapsulation of
 research software for easier execution across these environments.
 
-udocker is designed to address the requirement of executing scientific
+kooker is designed to address the requirement of executing scientific
 applications easily across a wide range of computing systems and digital
 infrastructures where the user may not have administration privileges, and
 where tools and functionalities to support Linux containers may not be
 available.
-In addition, udocker also simplifies the researcher interaction with the tools
+In addition, kooker also simplifies the researcher interaction with the tools
 required to execute containers by providing an integrated solution to execute
 Linux containers leveraging different approaches suitable for unprivileged
-users. Finally by executing containers without privileges udocker decreases the
-risks of privilege escalation. The udocker development started in 2016 and
-the original udocker paper [@GOMES2018] documented the initial versions up
+users. Finally by executing containers without privileges kooker decreases the
+risks of privilege escalation. The kooker development started in 2016 and
+the original kooker paper [@GOMES2018] documented the initial versions up
 to 1.1.1.
 
 # Concept
 
-udocker provides a self contained solution with minimal dependencies to enable
-execution across systems without need of source code compilation. udocker itself
+kooker provides a self contained solution with minimal dependencies to enable
+execution across systems without need of source code compilation. kooker itself
 was initially implemented in Python 2 and later ported to Python 3.
 
-udocker implements pulling, importing and loading of *docker* or OCI containers to
+kooker implements pulling, importing and loading of *docker* or OCI containers to
 a local repository in the user home directory. The layers composing a container
 image can then be sequentially extracted to create a flattened directory tree.
-Furthermore udocker also provides the logic to interface with the several
+Furthermore kooker also provides the logic to interface with the several
 execution engines that enable the execution of code extracted from the container
 images, thus hiding as much as possible the execution engines specificity.
 The execution engines are based on existing open source software that in several
 cases has been significantly improved, integrated and packaged to be used with
-udocker. The following engines are currently provided:
+kooker. The following engines are currently provided:
 
 * **F** engine: uses the Linux shared library PRELOAD mechanism to intercept
   shared library calls and translate pathnames to provide an unprivileged chroot
   like functionality. It is implemented by an extensively enhanced *Fakechroot*
-  shared library with versions for the *glibc* [@FAKECHROOT-GLIBC-UDOCKER]
-  and *musl* [@FAKECHROOT-MUSL-UDOCKER] *C* standard libraries.
+  shared library with versions for the *glibc* [@FAKECHROOT-GLIBC-KOOKER]
+  and *musl* [@FAKECHROOT-MUSL-KOOKER] *C* standard libraries.
   This approach requires the modification of pathnames in the ELF headers of
-  shared libraries and executables. These changes are performed by udocker using
-  a modified *Patchelf* [@PATCHELF-UDOCKER]. This is the
+  shared libraries and executables. These changes are performed by kooker using
+  a modified *Patchelf* [@PATCHELF-KOOKER]. This is the
   execution engine that generally provides the highest performance.
 
 * **P** engine: uses the Linux PTRACE mechanism to implement a chroot like
   environment by intercepting system calls and translating pathnames. It is
-  implemented by a modified *PRoot* [@PROOT-UDOCKER]. This
+  implemented by a modified *PRoot* [@PROOT-KOOKER]. This
   engine provides the highest interoperability across Linux distributions both
-  older and newer, and constitutes the default execution engine for udocker.
+  older and newer, and constitutes the default execution engine for kooker.
 
 * **R** engine: uses either *runc* [@RUNC] or *crun* [@CRUN] to execute the
   containers without privileges using Linux user namespaces. Both tools are
-  provided with udocker for wider interoperability.
+  provided with kooker for wider interoperability.
 
 * **S** engine: uses *Singularity* [@KURTZER2017] to execute the containers using
   user namespaces or other *Singularity* supported execution method depending
@@ -133,19 +133,19 @@ distribution.
 
 Support for the ARM architecture is
 provided for the **P** mode and is ongoing for the other modes. The binaries
-for the **S** engine are not provided with udocker, as this mode is provided
+for the **S** engine are not provided with kooker, as this mode is provided
 to take advantage of local installations of *Singularity* where available.
 
-Once the udocker Python code is transferred to the target host it can be
+Once the kooker Python code is transferred to the target host it can be
 used by an unprivileged user to download the additional executables and
-binaries into the user home directory. The user can then use udocker to
+binaries into the user home directory. The user can then use kooker to
 pull images, create container directories from the images and execute them.
 Each extracted container can be easily setup for execution using any of the
-execution engines. udocker provides a command line interface with a syntax
+execution engines. kooker provides a command line interface with a syntax
 similar to docker.
 
 Compared with other container tools that can enable unprivileged
-execution such as *podman*, *docker*, or *Singularity* among others, udocker
+execution such as *podman*, *docker*, or *Singularity* among others, kooker
 is unique in offering multiple execution engines for unprivileged execution,
 two of these engines are based on pathname translation not requiring kernel
 features such as Linux user namespaces thus enabling execution across a
@@ -160,7 +160,7 @@ accessible to root creating opportunities for new vulnerabilities to
 arise. If isolation between the container and the running host is
 important then namespaces provide the highest level of isolation at the
 expense of the described risks and limitations. For the users that wish
-to rely on Linux namespaces udocker also offers support for this approach
+to rely on Linux namespaces kooker also offers support for this approach
 through *runc* and *crun* or through *Singularity* if locally installed.
 The tools that can execute containers using `chroot` or `pivot_root` and
 use privileges such as *Shifter*, *Sarus* [@BENEDICIC2019] or the original
@@ -168,13 +168,13 @@ mode of *Singularity* have the limitation of requiring installation and
 configuration by a system administrator and of having a higher risk of
 privilege escalation as privileges are used in some operations.
 Since these tools run with privileges they can use approaches such as
-using *squashfs* to improve file access. On de other hand udocker is
+using *squashfs* to improve file access. On de other hand kooker is
 focused on deployment and execution entirely by the end-user and thus
 cannot provide features that require privileges.
 
 # Developments since 1.1.1
 
-udocker was initially developed in the context of the INDIGO-DataCloud
+kooker was initially developed in the context of the INDIGO-DataCloud
 [@INDIGO2018] research project between 2015 and 2017 as a proof of concept
 aimed to show that scientific applications could be encapsulated in Linux
 containers to ease execution across the growing ecosystem of computing
@@ -185,12 +185,12 @@ systems and without system administrator intervention, thus empowering users
 and promoting the adoption of containers in these environments.
 
 Being a proof of concept the initial versions were not designed for
-production use. Later in the project it become evident that udocker
+production use. Later in the project it become evident that kooker
 had gain adoption beyond its original purpose and scope and that is was
 already being actively used in production environments. After the
-first udocker publication [@GOMES2018] produced using versions
+first kooker publication [@GOMES2018] produced using versions
 1.1.0 and 1.1.1, the development effort was directed
-to enhance udocker for production use by improving the design, robustness
+to enhance kooker for production use by improving the design, robustness
 and functionality. Two code branches became supported in parallel.
 The *devel* branch for the production versions 1.1.x retained the original
 proof of concept code for Python 2, while the *devel3* branch supported
@@ -199,8 +199,8 @@ later gave origin to the 1.2.x pre-releases. The version 1.3.0 released in
 June of 2021 is the first production release having the new design and
 support for Python 2 and 3.
 
-Since version 1.1.1 the udocker code was reorganized, largely rewritten
-and improved. Starting with the 1.2.0 pre-release, udocker was completely
+Since version 1.1.1 the kooker code was reorganized, largely rewritten
+and improved. Starting with the 1.2.0 pre-release, kooker was completely
 restructured moving from being a single large
 monolithic Python script to become a modular Python application, making
 maintenance and contributions easier. The new code structure has 40 Python
@@ -215,30 +215,30 @@ versions in terms of command line parsing and validation of arguments.
 The parsing of the configuration files was reimplemented to simplify
 the design and prevent injection of code via the configuration files.
 Configuration is now possible at three levels, system configuration via
-`/etc/udocker.conf`, user configuration via `$HOME/.udocker/udocker.conf`
-and udocker repository level via `$UDOCKER_DIR/udocker.conf`.
+`/etc/kooker.conf`, user configuration via `$HOME/.kooker/kooker.conf`
+and kooker repository level via `$KOOKER_DIR/kooker.conf`.
 The most relevant configuration options can now be overridden through
 new environment variables.
 
-* `UDOCKER_DEFAULT_EXECUTION_MODE`: to change the default execution
+* `KOOKER_DEFAULT_EXECUTION_MODE`: to change the default execution
   engine mode, which is currently **P1** using *PRoot*.
 
-* `UDOCKER_FAKECHROOT_SO`: to enforce the use of a specific *Fakechroot*
+* `KOOKER_FAKECHROOT_SO`: to enforce the use of a specific *Fakechroot*
   shareable library for use in **F** execution modes.
 
-* `UDOCKER_USE_CURL_EXECUTABLE`: to select a *curl* executable as
+* `KOOKER_USE_CURL_EXECUTABLE`: to select a *curl* executable as
   alternative to `pycurl` for downloads and interaction with REST APIs.
 
-* `UDOCKER_USE_PROOT_EXECUTABLE`: to enforce the use of a given *PRoot*
+* `KOOKER_USE_PROOT_EXECUTABLE`: to enforce the use of a given *PRoot*
   executable for use in **P** execution modes.
 
-* `UDOCKER_USE_RUNC_EXECUTABLE`: to enforce the use of a given *runc*
+* `KOOKER_USE_RUNC_EXECUTABLE`: to enforce the use of a given *runc*
   or *crun* executable for use in **R** execution modes.
 
-* `UDOCKER_USE_SINGULARITY_EXECUTABLE`: to enforce the use of a given
+* `KOOKER_USE_SINGULARITY_EXECUTABLE`: to enforce the use of a given
   *Singularity* executable for use in **S** execution modes.
 
-* `UDOCKER_FAKECHROOT_EXPAND_SYMLINKS`: to control the expansion of
+* `KOOKER_FAKECHROOT_EXPAND_SYMLINKS`: to control the expansion of
   symbolic links in paths pointing to volumes when using the **F** modes.
   This variable allows to disable the new path translation algorithm that
   is now accurate but slower.
@@ -250,24 +250,24 @@ The variables used to control the choice of images and libraries reflect
 the new automated selection of the engine executables and libraries based
 on system architecture, kernel version, and Linux distribution of both
 the host and container. This selection is performed automatically but can
-be overridden by the corresponding environment variables. Support in udocker
+be overridden by the corresponding environment variables. Support in kooker
 to select the execution engine binaries for the architectures *x86_64*,
 *aarch64*, *arm* 32bit and *i386* was added. However the corresponding
-binaries must be provided and placed under `$HOME/.udocker/bin` for
-executables and `$HOME/.udocker/lib` for libraries.
+binaries must be provided and placed under `$HOME/.kooker/bin` for
+executables and `$HOME/.kooker/lib` for libraries.
 Currently the external tools and libraries compiled and provided with
-udocker support *x86_64*, *aarch64*, *arm* 32bit and *i386* for use with the
+kooker support *x86_64*, *aarch64*, *arm* 32bit and *i386* for use with the
 **P** modes. The binaries for the remaining execution modes are currently
 only provided for *x86_64* systems, this may change in the future as these
 and other architectures become more widely used.
 
-The **F** mode is particularly unique to udocker. It relies on the interception
+The **F** mode is particularly unique to kooker. It relies on the interception
 of shared library calls using a modified *Fakechroot* shared library. By default
 *Fakechroot* requires the same libraries and dynamic loader both in the host
-and in the `chroot` environment. The *Fakechroot* libraries modified for udocker
-in combination with udocker itself enable the execution of containers whose shared
+and in the `chroot` environment. The *Fakechroot* libraries modified for kooker
+in combination with kooker itself enable the execution of containers whose shared
 libraries and dynamic loader can be completely different from the ones used in the
-host system.  After version 1.1.1 the *Fakechroot* implementation of udocker was
+host system.  After version 1.1.1 the *Fakechroot* implementation of kooker was
 much improved to enable these scenarios. A complete porting of the
 *Fakechroot* libraries was performed for the *musl libc*, enabling support for
 containers having code compiled against *musl libc* such as *Alpine* based containers.
@@ -277,8 +277,8 @@ the `chroot` environment if the pathname remains the same, (e.g. the host /dev
 can only be mapped to the container /dev). This is a strong limitation as the
 host pathnames may need to be mapped to different container locations.
 Implementing a complete mapping required extensive modifications to *Fakechroot*
-that were only completed for the libraries distributed with udocker version
-1.1.6. Also in the **F** modes, udocker must apply changes to
+that were only completed for the libraries distributed with kooker version
+1.1.6. Also in the **F** modes, kooker must apply changes to
 the ELF headers of executables and libraries. To this end a modified version of
 `patchelf` is used. The set of changes required included the ability to perform all
 header modifications in a single step, the original version had to be invoked
@@ -286,7 +286,7 @@ as many times as the number of required changes. The changes required to the sha
 objects include the pathname to the system loader and the pathnames for shared
 libraries. Support for the handling of loader string tokens such as `$ORIGIN`
 that were previously ignored also had to be added. The complete functionality
-for *Fakechroot* became available with udocker 1.1.6. The shared libraries must
+for *Fakechroot* became available with kooker 1.1.6. The shared libraries must
 be compiled against the *libc* of the container environment. Therefore the range
 of libraries provided has been growing constantly since the initial versions.
 Libraries to support new distributions and releases have been regularly added.
@@ -294,7 +294,7 @@ This effort includes any necessary updates to *Fakechroot* such as adding
 support for new C standard library calls as required.
 
 The **P** mode is based on *PRoot* and is the original execution engine
-supported since version 1.0.0. As shipped with udocker it offers a transparent
+supported since version 1.0.0. As shipped with kooker it offers a transparent
 method to execute containers across Linux distributions that conversely
 to the **F** mode based on *Fakechroot* does not require changes to the
 container binaries. Since the pathname translation is performed at the
@@ -304,9 +304,9 @@ be taken to dynamically adapt to the underlying kernel capabilities.
 Since version 1.0.1 the support for syscall interception using PTRACE and
 SECCOMP had to be modified to cope with kernel changes. This was a major
 issue the deeply affected the performance of *PRoot* and for which no
-upstream solution existed. A first incomplete fix was created by the udocker
+upstream solution existed. A first incomplete fix was created by the kooker
 developers and introduced with 1.0.1. The complete implementation only became
-available with udocker 1.1.4, which was later extended in 1.1.7 to address
+available with kooker 1.1.4, which was later extended in 1.1.7 to address
 the special case of distributions that backported the PTRACE kernel patches
 to previous versions of the kernel. In addition support for several new
 system calls had to be incorporated including *faccessat2()*, *newfstatat()*,
@@ -316,18 +316,18 @@ capability is allows applications that use newer systems calls to still
 work on older Linux releases where a *kernel too old* error would be issued.
 
 The **R** execution mode was originally implemented by using *runc*
-in rootless mode. In this mode udocker creates the require configurations
+in rootless mode. In this mode kooker creates the require configurations
 for *runc* to execute containers without requiring privileges using
 the Linux user namespace. In version 1.1.2 support for pseudo ttys was added
-to udocker for *runc* enabling execution in batch systems and other
+to kooker for *runc* enabling execution in batch systems and other
 environments without a terminal. In version 1.1.4, the support for *crun*
 was also introduced. While *runc* is written in *go*, *crun* is written
 in *C* and is generally faster. Furthermore *crun* provided support for the
 kernel *cgroups* version 2 which became required in some distributions.
-Both tools are now provided statically compiled with udocker and the
+Both tools are now provided statically compiled with kooker and the
 Python code was enhanced to support both.
 
-udocker implements its own code to manipulate container images and
+kooker implements its own code to manipulate container images and
 interact with container repositories. The initial versions were limited
 to the Docker image format and were largely tied to *DockerHub*. Since then
 effort was put to improve the implementation of the Docker Registry API
@@ -346,7 +346,7 @@ API v1 and v2 using `/v2/search/repositories`. In addition support to
 list image tags was also implemented as part of the search command.
 Support for the use of proxies in image searches was added enabling both
 `search` and `pull` of containers via socks proxies. The handling of http
-redirects was also implemented inside udocker to address shortcomings that
+redirects was also implemented inside kooker to address shortcomings that
 affected some releases of *curl* and consequently also *pycurl*.
 
 Also in version 1.1.4 the checksumming of container layers was improved,
@@ -356,14 +356,14 @@ images implemented by the `verify` command was also improved to include
 all supported container image formats performing both the structure
 validation and the file checksumming where applicable.
 
-The new udocker commands introduced since 1.1.1 include the `save` of
+The new kooker commands introduced since 1.1.1 include the `save` of
 container images to file or standard output, `rename` to change the name
 of a created container and `clone` to duplicate a created container
-including its changes and retaining udocker specific configurations. Several
+including its changes and retaining kooker specific configurations. Several
 existing commands got new flags such as `run` where `--env-file=filename`
 enables reading environment variables from a file, `--device` adds additional
 host devices to container when using the **R** execution modes, and
-`--containerauth` that prevents the default udocker
+`--containerauth` that prevents the default kooker
 behavior of adding the invoking user to the container password and group files.
 The handling of entrypoint information provided via `run --entrypoint` or
 through the container metadata was changed in version 1.3.0 to match the
@@ -375,48 +375,48 @@ mode is defined per container. The `setup` command used to configure the
 created containers also got new flags, namely `--purge` to remove files
 created within a container by such as mount points, and `--fixperms` to
 fix the permissions and also the ownership of files created by the **R**
-execution modes while using user namespaces. To this end udocker provides
+execution modes while using user namespaces. To this end kooker provides
 is own Python implementation of *unshare* to enable the removal of files
 owned by different subordinated uid or gid identifiers.
 
 The `setup` command was also enhanced with the `--nvidia` flag, that provides
-am `nvidia-docker` like capability for udocker providing support for the execution
-of GPU accelerated applications across different hosts systems. For `udocker` this
+am `nvidia-docker` like capability for kooker providing support for the execution
+of GPU accelerated applications across different hosts systems. For `kooker` this
 functionality needs to take into account the characteristics of each execution engine.
 While in some engines the required host pathnames can be transparently mapped into
 the container, in other modes this may require creation of mount points or the copy
 of the actual host files to the container. These requirements are now handled
-transparently as part of the udocker volume handling. Thanks to these improvements
-udocker has been increasingly used to support accelerated computing applications
+transparently as part of the kooker volume handling. Thanks to these improvements
+kooker has been increasingly used to support accelerated computing applications
 and in particular machine learning.
 
-udocker has been successfully used in environments where conventional container
+kooker has been successfully used in environments where conventional container
 tools cannot be used, such as when namespaces are not available or privileges
 are required. These include running containers within *docker* itself, and
 running within services and applications such as *AWS lambda*, *google colab* [@COLAB]
 or *Termux* [@TERMUX]. Several enhancements were introduced since version 1.1.1 to
-enable the usage of udocker within this type of environments using the pathname
+enable the usage of kooker within this type of environments using the pathname
 translation approaches provided by the **P** and **F** execution engines.
 
-The external tools and libraries used by udocker to support the execution
+The external tools and libraries used by kooker to support the execution
 engines are distributed in binary format in a package that was released
-simultaneously with udocker. The handling of the versions of both udocker
+simultaneously with kooker. The handling of the versions of both kooker
 and of the package was decoupled to make possible the release of new tools
-and libraries without requiring a new release of udocker. For each
-udocker version there is now a minimum release of the package containing
+and libraries without requiring a new release of kooker. For each
+kooker version there is now a minimum release of the package containing
 the tools and libraries. If available new versions of the package can
 be installed or updated using the `install` command. The resilience of
 the installation process was improved and better recovery from download
 errors was implemented. The extraction of documentation and software
 licenses from the package was included as part of the installation process.
-The documentation is now extracted to a new directory `$HOME/.udocker/doc`.
+The documentation is now extracted to a new directory `$HOME/.kooker/doc`.
 In addition the command `version` was added to display the versions and
 the locations from which the package containing the tools and libraries
-can be obtained. udocker itself can be installed from the GitHub releases
+can be obtained. kooker itself can be installed from the GitHub releases
 and is now also available from *PyPI*[@PYPI].
 
-The system wide installation of udocker from a central shared filesystem
-has become a more frequent deployment scenario. In this situation udocker
+The system wide installation of kooker from a central shared filesystem
+has become a more frequent deployment scenario. In this situation kooker
 is installed in a shared location often readonly. Depending on the
 situation the installation may include just the executables and libraries
 or a combination that may also include pre-defined images or even created
@@ -424,7 +424,7 @@ containers that are ready to be executed. The steps and implications of
 using a shared installation and in particular of using readonly locations
 have been addressed.
 
-The software quality assurance for udocker was improved. The *Jenkins
+The software quality assurance for kooker was improved. The *Jenkins
 Pipeline Library* [@JEPL] was adopted to describe the quality assurance
 pipelines that include stages for code style checking using *pylint*,
 security using *bandit* and execution of the unit and integration tests.
@@ -434,14 +434,14 @@ including the removal of shell context from process creation and
 the reimplementation of the configuration files handling to prevent
 the injection of undesired code.
 
-Between versions 1.1.1 and 1.1.7 the udocker source code grew from
+Between versions 1.1.1 and 1.1.7 the kooker source code grew from
 6663 lines to 8703 lines, the *diffstat* metrics report 3847 lines
 inserted and 1807 lines deleted. These metrics correspond to the changes
 introduced in the 1.1.x versions for Python 2, they exclude the development
 effort related to the execution engines, the unit tests and the development
 of the Python 3 version now available in production as 1.3.0.
 
-# Research with udocker
+# Research with kooker
 
 Examples of usage can be found in several domains including:
 physics [@BAGNASCHI2018] [@BAGNASCHI2019] [@BEZYAZEEKOV2019] [@BEZYAZEEKOV2021],
@@ -456,7 +456,7 @@ machine learning [@GRUPP2019] [@DEEP2020] [@CAVALLARO2019],
 and computer science in general [@CABALLER2021] [@RISCO2021] [@SUFI2020] [@ALDINUCCI2017]
 [@OWSIAK2017].
 
-udocker was used in the European projects EOSC-hub [@EOSCHUB] where it
+kooker was used in the European projects EOSC-hub [@EOSCHUB] where it
 was further improved and DEEP-hybrid-DataCloud [@DEEP2020] where it was ported
 to Python 3, enhanced to support nvidia GPUs and used to execute deep
 learning frameworks. Since 2021 is used in the EOSC-Synergy [@KERZENMACHER2021],
@@ -473,7 +473,7 @@ centers and research infrastructures worldwide such as:
 * University of Utah HPC center [@UTAH]
 * University of Coruña Pluton Cluster [@CORUNA]
 
-udocker was been integrated in several research oriented frameworks such as:
+kooker was been integrated in several research oriented frameworks such as:
 
 * SCAR - Serverless Container-aware Architectures [@PEREZ2018] to enable execution of
    containers in Amazon Lambda exploiting function as a service (FaaS);
@@ -486,7 +486,7 @@ udocker was been integrated in several research oriented frameworks such as:
 
 # Acknowledgments
 
-udocker has been developed in the framework of the H2020 projects INDIGO-DataCloud (RIA 653549),
+kooker has been developed in the framework of the H2020 projects INDIGO-DataCloud (RIA 653549),
 EOSC-hub (RIA 777536) and DEEP-Hybrid-DataCloud (RIA 777435). The proofs of concept have been
 performed at INCD-Infraestrutura Nacional de Computação Distribuída (funded by FCT, P2020,
 Lisboa2020, COMPETE and FEDER under the project number 22153-01/SAICT/2016), FinisTerrae II machine

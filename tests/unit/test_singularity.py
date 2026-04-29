@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-udocker unit tests: SingularityEngine
+kooker unit tests: SingularityEngine
 """
 
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
-from udocker.config import Config
-from udocker.engine.singularity import SingularityEngine
+from kooker.config import Config
+from kooker.engine.singularity import SingularityEngine
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -18,13 +18,13 @@ class SingularityEngineTestCase(TestCase):
     def setUp(self):
         Config().getconf()
 
-        str_local = 'udocker.container.localrepo.LocalRepository'
+        str_local = 'kooker.container.localrepo.LocalRepository'
         self.lrepo = patch(str_local)
         self.local = self.lrepo.start()
         self.mock_lrepo = Mock()
         self.local.return_value = self.mock_lrepo
 
-        str_exmode = 'udocker.engine.execmode.ExecutionMode'
+        str_exmode = 'kooker.engine.execmode.ExecutionMode'
         self.execmode = patch(str_exmode)
         self.xmode = self.execmode.start()
         self.mock_execmode = Mock()
@@ -40,10 +40,10 @@ class SingularityEngineTestCase(TestCase):
         self.assertEqual(sing.executable, None)
         self.assertEqual(sing.execution_id, None)
 
-    @patch('udocker.helper.elfpatcher.os.path.exists')
-    @patch('udocker.engine.singularity.HostInfo.arch')
-    @patch('udocker.engine.singularity.FileUtil.find_file_in_dir')
-    @patch('udocker.engine.singularity.FileUtil.find_exec')
+    @patch('kooker.helper.elfpatcher.os.path.exists')
+    @patch('kooker.engine.singularity.HostInfo.arch')
+    @patch('kooker.engine.singularity.FileUtil.find_file_in_dir')
+    @patch('kooker.engine.singularity.FileUtil.find_exec')
     def test_02_select_singularity(self, mock_findexe, mock_find,
                                    mock_arch, mock_exists):
         """Test02 SingularityEngine().select_singularity()."""
@@ -54,7 +54,7 @@ class SingularityEngineTestCase(TestCase):
         sing.select_singularity()
         self.assertTrue(mock_findexe.called)
 
-        Config.conf['use_singularity_executable'] = "UDOCKER"
+        Config.conf['use_singularity_executable'] = "KOOKER"
         mock_arch.return_value = "amd64"
         mock_find.return_value = "singularity-x86_64"
         mock_exists.return_value = True
@@ -63,7 +63,7 @@ class SingularityEngineTestCase(TestCase):
         self.assertTrue(mock_arch.called)
         self.assertTrue(mock_find.called)
 
-        Config.conf['use_singularity_executable'] = "UDOCKER"
+        Config.conf['use_singularity_executable'] = "KOOKER"
         mock_arch.return_value = "i386"
         mock_find.return_value = "singularity-x86"
         mock_exists.return_value = True
@@ -72,8 +72,8 @@ class SingularityEngineTestCase(TestCase):
         self.assertTrue(mock_arch.called)
         self.assertTrue(mock_find.called)
 
-    @patch('udocker.engine.singularity.NixAuthentication.get_home')
-    @patch('udocker.engine.singularity.os.path.isdir')
+    @patch('kooker.engine.singularity.NixAuthentication.get_home')
+    @patch('kooker.engine.singularity.os.path.isdir')
     def test_03__get_volume_bindings(self, mock_isdir, mock_gethome):
         """Test03 SingularityEngine()._get_volume_bindings()."""
         res_exp = ['-B', '/dir1:/dir1',
@@ -112,7 +112,7 @@ class SingularityEngineTestCase(TestCase):
         status = sing._singularity_env_get()
         self.assertEqual(status, res_exp)
 
-    @patch('udocker.engine.singularity.FileUtil.mkdir')
+    @patch('kooker.engine.singularity.FileUtil.mkdir')
     def test_05__make_container_dirs(self, mock_mkdir):
         """Test05 SingularityEngine()._make_container_directories()."""
         mock_mkdir.side_effect = [None, None, None, None, None, None]
@@ -120,7 +120,7 @@ class SingularityEngineTestCase(TestCase):
         sing._make_container_directories()
         self.assertTrue(mock_mkdir.call_count, 6)
 
-    @patch('udocker.engine.singularity.Msg')
+    @patch('kooker.engine.singularity.Msg')
     def test_06__run_invalid_options(self, mock_msg):
         """Test06 SingularityEngine()._run_invalid_options()."""
         mock_msg.level = 0
@@ -131,9 +131,9 @@ class SingularityEngineTestCase(TestCase):
         self.assertTrue(mock_msg.called)
 
     @patch.object(SingularityEngine, '_has_option')
-    @patch('udocker.engine.singularity.NixAuthentication')
-    @patch('udocker.engine.singularity.HostInfo.username')
-    @patch('udocker.engine.singularity.Msg')
+    @patch('kooker.engine.singularity.NixAuthentication')
+    @patch('kooker.engine.singularity.HostInfo.username')
+    @patch('kooker.engine.singularity.Msg')
     def test_07__run_as_root(self, mock_msg, mock_uname,
                              mock_nixauth, mock_hasopt):
         """Test07 SingularityEngine()._run_as_root()."""
@@ -188,10 +188,10 @@ class SingularityEngineTestCase(TestCase):
     @patch.object(SingularityEngine, '_make_container_directories')
     @patch.object(SingularityEngine, '_run_invalid_options')
     @patch.object(SingularityEngine, '_run_init')
-    @patch('udocker.engine.singularity.subprocess.call')
-    @patch('udocker.engine.singularity.Unique.uuid')
-    @patch('udocker.engine.singularity.FileBind')
-    @patch('udocker.engine.singularity.os.path.isdir')
+    @patch('kooker.engine.singularity.subprocess.call')
+    @patch('kooker.engine.singularity.Unique.uuid')
+    @patch('kooker.engine.singularity.FileBind')
+    @patch('kooker.engine.singularity.os.path.isdir')
     def test_08_run(self, mock_isdir, mock_fbind, mock_uuid, mock_call,
                     mock_rinit, mock_rinvopt, mock_mkcontdir,
                     mock_selsing, mock_runroot, mock_renvset, mock_getvolbind,

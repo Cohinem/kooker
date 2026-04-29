@@ -2,15 +2,15 @@
 
 # -*- coding: utf-8 -*-
 """
-udocker unit tests: GetURL
+kooker unit tests: GetURL
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch
-from udocker.utils.curl import GetURL
-from udocker.utils.curl import GetURLpyCurl
-from udocker.utils.curl import GetURLexeCurl
-from udocker.config import Config
+from kooker.utils.curl import GetURL
+from kooker.utils.curl import GetURLpyCurl
+from kooker.utils.curl import GetURLexeCurl
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -40,7 +40,7 @@ class GetURLTestCase(TestCase):
     @patch.object(GetURLexeCurl, '_select_implementation')
     @patch.object(GetURLexeCurl, 'is_available')
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.utils.curl.Msg')
+    @patch('kooker.utils.curl.Msg')
     def test_01_init(self, mock_msg, mock_gupycurl,
                      mock_guexecurl, mock_select):
         """Test01 GetURL() constructor."""
@@ -53,7 +53,7 @@ class GetURLTestCase(TestCase):
         self.assertEqual(geturl.insecure, Config().conf['http_insecure'])
         self.assertFalse(geturl.cache_support)
 
-    @patch('udocker.utils.curl.Msg')
+    @patch('kooker.utils.curl.Msg')
     @patch.object(GetURLexeCurl, 'is_available')
     @patch.object(GetURLpyCurl, 'is_available')
     def test_02__select_implementation(self, mock_gupycurl,

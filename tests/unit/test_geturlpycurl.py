@@ -2,15 +2,15 @@
 
 # -*- coding: utf-8 -*-
 """
-udocker unit tests: GetURLpyCurl
+kooker unit tests: GetURLpyCurl
 """
 
 from unittest import TestCase, main
 from unittest.mock import patch
 # from unittest.mock import patch, Mock
 # from io import BytesIO as strio
-from udocker.utils.curl import GetURLpyCurl
-from udocker.config import Config
+from kooker.utils.curl import GetURLpyCurl
+from kooker.config import Config
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -41,7 +41,7 @@ class GetURLpyCurlTestCase(TestCase):
         geturl = GetURLpyCurl()
         self.assertEqual(geturl._url, None)
 
-    # @patch('udocker.utils.curl.pycurl.Curl')
+    # @patch('kooker.utils.curl.pycurl.Curl')
     # def test_02_is_available(self, mock_pycurl):
     #     """Test02 GetURLpyCurl().is_available()."""
     #     mock_pycurl.return_value = True
@@ -65,9 +65,9 @@ class GetURLpyCurlTestCase(TestCase):
     #     """Test03 GetURLpyCurl()._select_implementation()."""
 
     # @patch.object(GetURLpyCurl, 'is_available')
-    # @patch('udocker.utils.curl.Msg')
-    # @patch('udocker.utils.curl.pycurl.Curl')
-    # @patch('udocker.utils.curl.CurlHeader')
+    # @patch('kooker.utils.curl.Msg')
+    # @patch('kooker.utils.curl.pycurl.Curl')
+    # @patch('kooker.utils.curl.CurlHeader')
     # def test_04__set_defaults(self, mock_hdr, mock_pyc,
     #                           mock_msg, mock_selinsec):
     #     """Test04 GetURLpyCurl()._set_defaults()."""
@@ -93,15 +93,15 @@ class GetURLpyCurlTestCase(TestCase):
     #     geturl._set_defaults(mock_pyc, mock_hdr)
     #     self.assertEqual(mock_pyc.setopt.call_count, 27)
 
-    # @patch('udocker.utils.curl.json.dumps')
+    # @patch('kooker.utils.curl.json.dumps')
     # def test_05__mkpycurl(self, mock_jdump):
     #     """Test05 GetURLpyCurl()._mkpycurl()."""
-    #     curl_patch = patch("udocker.utils.curl.CurlHeader")
+    #     curl_patch = patch("kooker.utils.curl.CurlHeader")
     #     curlhdr = curl_patch.start()
     #     mock_curlhdr = Mock()
     #     curlhdr.return_value = mock_curlhdr
     #
-    #     pyc_patch = patch("udocker.utils.curl.pycurl.Curl")
+    #     pyc_patch = patch("kooker.utils.curl.pycurl.Curl")
     #     pycurl = pyc_patch.start()
     #     mock_pycurl = Mock()
     #     pycurl.return_value = mock_pycurl

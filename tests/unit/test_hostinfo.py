@@ -2,13 +2,13 @@
 
 # -*- coding: utf-8 -*-
 """
-udocker unit tests: HostInfo
+kooker unit tests: HostInfo
 """
 
 import pwd
 from unittest import TestCase, main
 from unittest.mock import patch
-from udocker.helper.hostinfo import HostInfo
+from kooker.helper.hostinfo import HostInfo
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -17,9 +17,9 @@ collections.Callable = collections.abc.Callable
 class HostInfoTestCase(TestCase):
     """Test HostInfo"""
 
-    @patch('udocker.helper.hostinfo.os.getgid')
-    @patch('udocker.helper.hostinfo.os.getuid')
-    @patch('udocker.helper.hostinfo.pwd.getpwuid')
+    @patch('kooker.helper.hostinfo.os.getgid')
+    @patch('kooker.helper.hostinfo.os.getuid')
+    @patch('kooker.helper.hostinfo.pwd.getpwuid')
     def test_01_username(self, mock_getpwuid, mock_uid, mock_gid):
         """Test01 HostInfo().username."""
         usr = pwd.struct_passwd(["root", "*", "0", "0", "root usr",
@@ -30,7 +30,7 @@ class HostInfoTestCase(TestCase):
         name = HostInfo().username()
         self.assertEqual(name, usr.pw_name)
 
-    @patch('udocker.helper.hostinfo.platform.machine')
+    @patch('kooker.helper.hostinfo.platform.machine')
     def test_02_arch(self, mock_mach):
         """Test02 HostInfo().arch."""
         mock_mach.return_value = "x86_64"
@@ -53,14 +53,14 @@ class HostInfoTestCase(TestCase):
         result = HostInfo().arch("docker")
         self.assertEqual(result, "arm64")
 
-    @patch('udocker.helper.hostinfo.platform.system')
+    @patch('kooker.helper.hostinfo.platform.system')
     def test_03_osversion(self, mock_sys):
         """Test03 HostInfo().osversion."""
         mock_sys.return_value = "linux"
         result = HostInfo().osversion()
         self.assertEqual(result, "linux")
 
-    @patch('udocker.helper.hostinfo.platform.release')
+    @patch('kooker.helper.hostinfo.platform.release')
     def test_04_oskernel(self, mock_rel):
         """Test04 HostInfo().oskernel."""
         mock_rel.return_value = "3.2.1"
@@ -90,7 +90,7 @@ class HostInfoTestCase(TestCase):
     #     status = HostInfo().cmd_has_option("ls", "-z")
     #     self.assertFalse(status)
 
-    @patch('udocker.helper.hostinfo.Uprocess.check_output')
+    @patch('kooker.helper.hostinfo.Uprocess.check_output')
     def test_07_termsize(self, mock_chkout):
         """Test07 HostInfo().termsize."""
         mock_chkout.return_value = "24 80"

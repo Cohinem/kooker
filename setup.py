@@ -3,7 +3,7 @@
 
 """
 =============
-udocker setup
+kooker setup
 =============
 Wrapper to execute basic docker containers without using docker.
 This tool is a last resort for the execution of docker containers
@@ -21,7 +21,7 @@ limitations under the License.
 """
 
 from setuptools import setup, find_packages
-from udocker import __version__
+from kooker import __version__
 
 with open('README.md', 'r') as readme_file:
     README = readme_file.read()
@@ -29,14 +29,14 @@ with open('README.md', 'r') as readme_file:
 with open('CHANGELOG.md', 'r') as history_file:
     HISTORY = history_file.read()
 
-CONF_DIR = '/udocker/etc'
+CONF_DIR = '/kooker/etc'
 REQUIREMENTS = []
 SETUP_REQUIREMENTS = ['pytest-runner', ]
 TEST_REQUIREMENTS = ['pytest', ]
 
 setup(
     author="Jorge Gomes",
-    author_email='udocker@lip.pt',
+    author_email='kooker@lip.pt',
     version=__version__,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -60,7 +60,7 @@ setup(
     description="A basic user tool to execute simple docker \
         containers in batch or interactive systems without root privileges",
     entry_points={
-        'console_scripts': ['udocker=udocker.maincmd:main'],
+        'console_scripts': ['kooker=kooker.maincmd:main'],
     },
     install_requires=REQUIREMENTS,
     license="Apache Software License 2.0",
@@ -68,12 +68,12 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     keywords='Linux containers, HPC on cloud, Virtualization',
-    name='udocker',
+    name='kooker',
     packages=find_packages(),
-    data_files=[(CONF_DIR, ['etc/udocker.conf'])],
+    data_files=[(CONF_DIR, ['etc/kooker.conf'])],
     setup_requires=SETUP_REQUIREMENTS,
     test_suite='tests',
     tests_require=TEST_REQUIREMENTS,
-    url='https://github.com/indigo-dc/udocker',
+    url='https://github.com/indigo-dc/kooker',
     zip_safe=False,
 )

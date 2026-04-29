@@ -1,38 +1,38 @@
 # User manual
 
 A basic user tool to execute simple Docker containers in user space
-without requiring root privileges. udocker enables basic download and execution
+without requiring root privileges. kooker enables basic download and execution
 of Docker containers by non-privileged users in Linux systems where Docker
 is not available. It can be used to access and execute the content of
 docker containers in Linux batch systems and interactive clusters that
 are managed by other entities such as grid infrastructures, HPC clusters
 or other externally managed batch or interactive systems.
 
-udocker does not require any type of privileges nor the deployment of
+kooker does not require any type of privileges nor the deployment of
 services by system administrators. It can be downloaded and executed
 entirely by the end user. The limited root functionality provided by
-some of the udocker execution modes is either simulated or provided
+some of the kooker execution modes is either simulated or provided
 via user namespaces.
 
-udocker is a wrapper around several tools and technologies to mimic a
+kooker is a wrapper around several tools and technologies to mimic a
 subset of the Docker capabilities including pulling images and running
 then with minimal functionality.
 
-udocker is mainly meant to execute user applications packaged in Docker
+kooker is mainly meant to execute user applications packaged in Docker
 containers. We recommend the use of Docker whenever possible, but when
-it is unavailable udocker can be the right tool to run your applications.
+it is unavailable kooker can be the right tool to run your applications.
 
 ## 1. Introduction
 
 ### 1.1. How does it work
 
-udocker is written in Python, since v1.3.0 (or the development v1.2.x),
-udocker supports Python 2.6, 2.7 and Python >= 3.6. udocker has a minimal
+kooker is written in Python, since v1.3.0 (or the development v1.2.x),
+kooker supports Python 2.6, 2.7 and Python >= 3.6. kooker has a minimal
 set of dependencies so that can be executed in a wide range of Linux systems.
-udocker does not make use of Docker nor requires its installation.
+kooker does not make use of Docker nor requires its installation.
 
-udocker "executes" the containers by simply providing a chroot like
-environment to the extracted container. udocker is meant to integrate
+kooker "executes" the containers by simply providing a chroot like
+environment to the extracted container. kooker is meant to integrate
 several technologies and approaches hence providing an integrated environment
 that offers several execution options. This version provides execution engines
 based on PRoot, Fakechroot, runc, crun and Singularity to facilitate the
@@ -43,9 +43,9 @@ in the usual way; create the container out of that image (flattening the image
 on the filesystem), and finally run the container with the name we gave it in
 the creation process:
 
-* `udocker pull` busybox
-* `udocker create` --name=verybusy busybox
-* `udocker run` verybusy
+* `kooker pull` busybox
+* `kooker create` --name=verybusy busybox
+* `kooker run` verybusy
 
 This sequence allows the created container to be executed many times. If simultaneous
 executions are envisage just make sure that input/output files are not overwritten by
@@ -57,7 +57,7 @@ case a new container is created for every run invocation thus occupying more sto
 space. To pull, create and execute in a single step invoke run with an image name
 instead of container name:
 
-* `udocker run` busybox
+* `kooker run` busybox
 
 ### 1.2. Limitations
 
@@ -75,22 +75,22 @@ Other limitations:
 
 * the current implementation is limited to the pulling of Docker images and its execution;
 * the actual containers should be built using Docker and dockerfiles;
-* udocker does not provide all the Docker features, and is not intended as a Docker replacement;
+* kooker does not provide all the Docker features, and is not intended as a Docker replacement;
 * debugging and tracing in the PRoot engine will not work;
 * the Fakechroot engine does not support execution of statically linked executables;
-* udocker is mainly oriented at providing a run-time environment for containers
+* kooker is mainly oriented at providing a run-time environment for containers
   execution in user space.
-* udocker does not offer robust isolation features such as the ones offered by docker.
+* kooker does not offer robust isolation features such as the ones offered by docker.
 
 ### 1.3. Security
 
-udocker does not offer robust isolation features such as the ones offered
+kooker does not offer robust isolation features such as the ones offered
 by docker. Therefore if the containers content is not trusted then these
-containers should not be executed with udocker as they will run inside the
-user environment. For this reason udocker should not be run by privileged
+containers should not be executed with kooker as they will run inside the
+user environment. For this reason kooker should not be run by privileged
 users.
 
-udocker does not require privileges and runs under the identity of the user
+kooker does not require privileges and runs under the identity of the user
 invoking it.
 
 The containers data will be unpacked and stored in the user home directory or
@@ -99,11 +99,11 @@ the same filesystem protections as other files owned by the user. If the
 containers have sensitive information the files and directories should be
 adequately protected by the user.
 
-Users can download the udocker tarball, install in the home directory and
+Users can download the kooker tarball, install in the home directory and
 execute it from their own accounts without requiring system administration
 intervention.
 
-udocker provides a chroot like environment for container execution. This is
+kooker provides a chroot like environment for container execution. This is
 currently implemented by:
 
 * PRoot via the kernel ptrace system call;
@@ -111,7 +111,7 @@ currently implemented by:
 * runc and crun using rootless namespaces;
 * Singularity if available in the host system.
 
-udocker via PRoot offers the emulation of the root user. This emulation
+kooker via PRoot offers the emulation of the root user. This emulation
 mimics a real root user (e.g getuid will return 0). This is just an emulation
 no root privileges are involved. This feature enables tools that do not
 require privileges but that check the user id to work properly. This enables
@@ -122,27 +122,27 @@ stored in a file and can be easily accessed. Logout can be used to delete
 the credentials. If the host system is not trustable the login feature
 should not be used as it may expose the login credentials.
 
-udocker does not have privileged escalation issues as it runs entirely
+kooker does not have privileged escalation issues as it runs entirely
 without privileges.
 
 ### 1.4. Basic flow
 
-The basic flow with udocker is:
+The basic flow with kooker is:
 
-1. The user downloads udocker to its home directory and executes it
-2. Upon the first execution udocker will download additional tools
+1. The user downloads kooker to its home directory and executes it
+2. Upon the first execution kooker will download additional tools
 3. Container images can be fetched from Docker Hub with `pull`
 4. Containers can be created from the images with `create`
 5. Containers can then be executed with `run`
 
 Additionally:
 
-* Containers saved with `docker save` can be loaded with `udocker load -i`
-* Tarballs created with `docker export` can be imported with `udocker import`
+* Containers saved with `docker save` can be loaded with `kooker load -i`
+* Tarballs created with `docker export` can be imported with `kooker import`
 
 ## 2. Installation
 
-udocker can be deployed in the user home directory and thus does not require
+kooker can be deployed in the user home directory and thus does not require
 system installation. For further information see the
 [Installation manual](installation_manual.md).
 
@@ -150,30 +150,30 @@ system installation. For further information see the
 
 ### 3.1. Syntax
 
-The udocker syntax is very similar to Docker. Since version 1.0.1 the udocker
-preferred command name changed from udocker.py to udocker. A symbolic link
-between `udocker` and `maincmd.py` is provided when installing with the
+The kooker syntax is very similar to Docker. Since version 1.0.1 the kooker
+preferred command name changed from kooker.py to kooker. A symbolic link
+between `kooker` and `maincmd.py` is provided when installing with the
 distribution tarball.
 
 ```bash
-udocker [GLOBAL-PARAMETERS] COMMAND [COMMAND-OPTIONS] [COMMAND-ARGUMENTS]
+kooker [GLOBAL-PARAMETERS] COMMAND [COMMAND-OPTIONS] [COMMAND-ARGUMENTS]
 ```
 
 Quick examples:
 
 ```bash
-udocker --help
-udocker run --help
+kooker --help
+kooker run --help
 
-udocker pull busybox
-udocker --insecure pull busybox
-udocker create --name=verybusy busybox
-udocker run -v /tmp/mydir verybusy
-udocker run verybusy /bin/ls -l /etc
+kooker pull busybox
+kooker --insecure pull busybox
+kooker create --name=verybusy busybox
+kooker run -v /tmp/mydir verybusy
+kooker run verybusy /bin/ls -l /etc
 
-udocker pull --registry=https://registry.access.redhat.com  rhel7
-udocker create --name=rh7 rhel7
-udocker run rh7
+kooker pull --registry=https://registry.access.redhat.com  rhel7
+kooker create --name=rh7 rhel7
+kooker run rh7
 ```
 
 ### 3.2. Obtaining help
@@ -181,24 +181,24 @@ udocker run rh7
 General help about available commands can be obtained with:
 
 ```bash
-udocker --help
+kooker --help
 ```
 
 Command specific help can be obtained with:
 
 ```bash
-udocker COMMAND --help
+kooker COMMAND --help
 ```
 
 ### 3.3. install
 
 ```bash
-udocker install [OPTIONS]
+kooker install [OPTIONS]
 ```
 
-Install of udocker tools. Pulls the tools and installs them in the user
-home directory under `$HOME/.udocker` or in a location defined by the
-environment variable `UDOCKER_DIR`. The pulling may attempt several
+Install of kooker tools. Pulls the tools and installs them in the user
+home directory under `$HOME/.kooker` or in a location defined by the
+environment variable `KOOKER_DIR`. The pulling may attempt several
 mirrors.
 
 Options:
@@ -209,15 +209,15 @@ Options:
 Examples:
 
 ```bash
-udocker install
-udocker install --force --purge
+kooker install
+kooker install --force --purge
 ```
 
 ### 3.4. search
 
 ```bash
-udocker search [-a] STRING
-udocker search --list-tags REPO/IMAGE
+kooker search [-a] STRING
+kooker search --list-tags REPO/IMAGE
 ```
 
 Search Docker Hub for container images. The command displays containers one
@@ -236,16 +236,16 @@ Options:
 Examples:
 
 ```bash
-udocker search busybox
-udocker search -a busybox
-udocker search iscampos/openqcd
-udocker search --list-tags centos
+kooker search busybox
+kooker search -a busybox
+kooker search iscampos/openqcd
+kooker search --list-tags centos
 ```
 
 ### 3.5. pull
 
 ```bash
-udocker pull [OPTIONS] REPO/IMAGE:TAG
+kooker pull [OPTIONS] REPO/IMAGE:TAG
 ```
 
 Pull a container image from a docker repository by default uses dockerhub.
@@ -262,26 +262,26 @@ Options:
 Examples:
 
 ```bash
-udocker pull busybox
-udocker pull fedora:latest
-udocker pull indigodatacloudapps/disvis
-udocker pull quay.io/something/somewhere
-udocker pull --httpproxy=socks4://host:port busybox
-udocker pull --httpproxy=socks5://host:port busybox
-udocker pull --httpproxy=socks4://user:pass@host:port busybox
-udocker pull --httpproxy=socks5://user:pass@host:port busybox
-udocker pull --httpproxy=socks4a://host:port busybox
-udocker pull --httpproxy=socks5h://host:port busybox
-udocker pull --httpproxy=socks4a://user:pass@host:port busybox
-udocker pull --httpproxy=socks5h://user:pass@host:port busybox
-udocker pull --platform=linux/arm64 fedora:latest
-udocker pull --platform=linux/ppc64le centos:7
+kooker pull busybox
+kooker pull fedora:latest
+kooker pull indigodatacloudapps/disvis
+kooker pull quay.io/something/somewhere
+kooker pull --httpproxy=socks4://host:port busybox
+kooker pull --httpproxy=socks5://host:port busybox
+kooker pull --httpproxy=socks4://user:pass@host:port busybox
+kooker pull --httpproxy=socks5://user:pass@host:port busybox
+kooker pull --httpproxy=socks4a://host:port busybox
+kooker pull --httpproxy=socks5h://host:port busybox
+kooker pull --httpproxy=socks4a://user:pass@host:port busybox
+kooker pull --httpproxy=socks5h://user:pass@host:port busybox
+kooker pull --platform=linux/arm64 fedora:latest
+kooker pull --platform=linux/ppc64le centos:7
 ```
 
 ### 3.6. images
 
 ```bash
-udocker images [OPTIONS]
+kooker images [OPTIONS]
 ```
 
 List images available in the local repository, these are images pulled
@@ -295,20 +295,20 @@ Options:
 Examples:
 
 ```bash
-udocker images
-udocker images -l
+kooker images
+kooker images -l
 ```
 
 ### 3.7. create
 
 ```bash
-udocker create [OPTIONS] REPO/IMAGE:TAG
+kooker create [OPTIONS] REPO/IMAGE:TAG
 ```
 
 Extract a container from an image available in the local repository.
 Requires that the image has been previously pulled from Docker Hub,
 and/or load or imported into the local repository from a file.
-use `udocker images` to see the images available to create.
+use `kooker images` to see the images available to create.
 If successful the command prints the id of the extracted container.
 An easier to remember name can also be given with `--name`.
 
@@ -320,21 +320,21 @@ Options:
 Examples:
 
 ```bash
-udocker create --name=mycontainer indigodatacloud/disvis:latest
+kooker create --name=mycontainer indigodatacloud/disvis:latest
 ```
 
 ### 3.8. ps
 
 ```bash
-udocker ps [options]
+kooker ps [options]
 ```
 
 List extracted containers. These are not processes but containers
-extracted and available to the executed with `udocker run`.
+extracted and available to the executed with `kooker run`.
 The command displays:
 
 * container id
-* protection mode (e.g. whether can be removed with `udocker rm`)
+* protection mode (e.g. whether can be removed with `kooker rm`)
 * whether the container tree is writable (is in a R/W location)
 * the easier to remember name(s)
 * the name of the container image from which it was extracted
@@ -350,17 +350,17 @@ Options:
 Examples:
 
 ```bash
-udocker ps
+kooker ps
 ```
 
 ### 3.9. rmi
 
 ```bash
-udocker rmi [OPTIONS] REPO/IMAGE:TAG
+kooker rmi [OPTIONS] REPO/IMAGE:TAG
 ```
 
 Delete a local container image previously pulled/loaded/imported.
-Existing images in the local repository can be listed with `udocker images`.
+Existing images in the local repository can be listed with `kooker images`.
 If short of disk space deleting the image after creating the container can be
 an option.
 
@@ -371,13 +371,13 @@ Options:
 Examples:
 
 ```bash
-udocker rmi -f indigodatacloud/ambertools\_app:latest
+kooker rmi -f indigodatacloud/ambertools\_app:latest
 ```
 
 ### 3.10. rm
 
 ```bash
-udocker rm [options] CONTAINER-ID
+kooker rm [options] CONTAINER-ID
 ```
 
 Delete a previously created container. Removes the entire directory tree
@@ -391,15 +391,15 @@ Options:
 Examples:
 
 ```bash
-udocker rm 7b2d4456-9ee7-3138-ad01-63d1342d8545
-udocker rm mycontainer
+kooker rm 7b2d4456-9ee7-3138-ad01-63d1342d8545
+kooker rm mycontainer
 ```
 
 ### 3.11. inspect
 
 ```bash
-udocker inspect REPO/IMAGE:TAG
-udocker inspect [OPTIONS] CONTAINER-ID
+kooker inspect REPO/IMAGE:TAG
+kooker inspect [OPTIONS] CONTAINER-ID
 ```
 
 Prints container metadata. Applies both to container images or to
@@ -413,15 +413,15 @@ Options:
 Examples:
 
 ```bash
-udocker inspect ubuntu:latest
-udocker inspect d2578feb-acfc-37e0-8561-47335f85e46d
-udocker inspect -p d2578feb-acfc-37e0-8561-47335f85e46d
+kooker inspect ubuntu:latest
+kooker inspect d2578feb-acfc-37e0-8561-47335f85e46d
+kooker inspect -p d2578feb-acfc-37e0-8561-47335f85e46d
 ```
 
 ### 3.12. name
 
 ```bash
-udocker name CONTAINER-ID NAME
+kooker name CONTAINER-ID NAME
 ```
 
 Give an easier to remember name to an extracted container.
@@ -430,43 +430,43 @@ This is an alternative to the use of `create --name=`
 Examples:
 
 ```bash
-udocker name d2578feb-acfc-37e0-8561-47335f85e46d BLUE
+kooker name d2578feb-acfc-37e0-8561-47335f85e46d BLUE
 ```
 
 ### 3.13. rmname
 
 ```bash
-udocker rmname NAME
+kooker rmname NAME
 ```
 
 Remove a name previously given to an extracted container with
-`udocker --name=` or with `udocker name`. Does not remove the container.
+`kooker --name=` or with `kooker name`. Does not remove the container.
 
 Examples:
 
 ```bash
-udocker rmname BLUE
+kooker rmname BLUE
 ```
 
 ### 3.14. rename
 
 ```bash
-udocker rename NAME NEWNAME
+kooker rename NAME NEWNAME
 ```
 
 Change a container name previously given to an extracted container with
-`udocker --name=` or with `udocker name`. Does not change the container id.
+`kooker --name=` or with `kooker name`. Does not change the container id.
 
 Examples:
 
 ```bash
-udocker rename BLUE GREEN
+kooker rename BLUE GREEN
 ```
 
 ### 3.15. verify
 
 ```bash
-udocker verify REPO/IMAGE:TAG
+kooker verify REPO/IMAGE:TAG
 ```
 
 Performs sanity checks to verify a image available in the local repository.
@@ -474,13 +474,13 @@ Performs sanity checks to verify a image available in the local repository.
 Examples:
 
 ```bash
-udocker verify indigodatacloud/powerfit:latest
+kooker verify indigodatacloud/powerfit:latest
 ```
 
 ### 3.16. import
 
 ```bash
-udocker import [OPTIONS] TARBALL|- REPO/IMAGE:TAG
+kooker import [OPTIONS] TARBALL|- REPO/IMAGE:TAG
 ```
 
 Import a tarball from file or stdin. The tarball can be imported into a new
@@ -490,36 +490,36 @@ When using `--tocontainer`  allows importing directly into containers without
 creating images in the local repository.
 Use `--tocontainer` alone to import a container exported by docker
 (with `docker export`) into a new container without creating an image.
-Use `--clone` to import a udocker container
-(e.g. exported with `udocker export --clone`) into a new container also
+Use `--clone` to import a kooker container
+(e.g. exported with `kooker export --clone`) into a new container also
 without creating an image and allowing to preserve the container metadata
-and udocker execution modes. The option `--name=` adds a name alias to the
+and kooker execution modes. The option `--name=` adds a name alias to the
 created container, is used in conjunction with `--tocontainer` or `--clone`.
 
 Options:
 
 * `--mv` move the container tarball instead of copy to save space.
 * `--tocontainer` import directly into a container.
-* `--clone` import udocker container format with both metadata and container
+* `--clone` import kooker container format with both metadata and container
 * `--name=ALIAS` with `--tocontainer` or `--clone` to give an alias to the container
 * `--platform=os/architecture` specify the architecture of the binaries in the tarball
 
 Examples:
 
 ```bash
-udocker import docker_container.tar myrepo:latest
-udocker import - myrepo:latest < docker_container.tar
-udocker import --mv docker_container.tar myrepo:latest
-udocker import --tocontainer --name=BLUE docker_container.tar
-udocker import --clone --name=RED udocker_container.tar
+kooker import docker_container.tar myrepo:latest
+kooker import - myrepo:latest < docker_container.tar
+kooker import --mv docker_container.tar myrepo:latest
+kooker import --tocontainer --name=BLUE docker_container.tar
+kooker import --clone --name=RED kooker_container.tar
 ```
 
 ### 3.17. load
 
 ```bash
-udocker load -i IMAGE-FILE
-udocker load -i IMAGE-FILE NAME
-udocker load -
+kooker load -i IMAGE-FILE
+kooker load -i IMAGE-FILE NAME
+kooker load -
 ```
 
 Loads into the local repository a tarball containing a Docker image with
@@ -527,80 +527,80 @@ its layers and metadata. This is equivalent to pulling an image from
 Docker Hub but instead loading from a locally available file. It can be
 used to load a Docker image saved with `docker save`. A typical saved
 image is a tarball containing additional tar files corresponding to the
-layers and metadata. From version 1.1.4 onwards, udocker can also load
+layers and metadata. From version 1.1.4 onwards, kooker can also load
 images in OCI format.
 The optional NAME argument can be used to change the name of the loaded
 image. This argument is particularly relevant to provide adequate names
 to OCI loaded images as these frequently only provide tag names. If an
 OCI image does not provide a name and the argument NAME is also not
-provided in the command line, then udocker will generate a random name.
+provided in the command line, then kooker will generate a random name.
 
 Examples:
 
 ```bash
-udocker load -i docker-image.tar
-udocker load - < docker-image.tar
-udocker load -i oci-image.tar test-image
+kooker load -i docker-image.tar
+kooker load - < docker-image.tar
+kooker load -i oci-image.tar test-image
 ```
 
 ### 3.18. protect
 
 ```bash
-udocker protect REPO/IMAGE:TAG
-udocker protect CONTAINER-ID
+kooker protect REPO/IMAGE:TAG
+kooker protect CONTAINER-ID
 ```
 
-Marks an image or container against deletion by udocker.
-Prevents `udocker rmi` and `udocker rm` from removing
+Marks an image or container against deletion by kooker.
+Prevents `kooker rmi` and `kooker rm` from removing
 images or containers.
 
 Examples:
 
 ```bash
-udocker protect indigodatacloud/ambertools\_app:latest
-udocker protect 3d528987-a51e-331a-94a0-d278bacf79d9
+kooker protect indigodatacloud/ambertools\_app:latest
+kooker protect 3d528987-a51e-331a-94a0-d278bacf79d9
 ```
 
 ### 3.19. unprotect
 
 ```bash
-udocker unprotect REPO/IMAGE:TAG
-udocker unprotect CONTAINER-ID
+kooker unprotect REPO/IMAGE:TAG
+kooker unprotect CONTAINER-ID
 ```
 
-Removes a mark against deletion placed by `udocker protect`.
+Removes a mark against deletion placed by `kooker protect`.
 
 Examples:
 
 ```bash
-udocker unprotect indigodatacloud/ambertools\_app:latest
-udocker unprotect 3d528987-a51e-331a-94a0-d278bacf79d9
+kooker unprotect indigodatacloud/ambertools\_app:latest
+kooker unprotect 3d528987-a51e-331a-94a0-d278bacf79d9
 ```
 
 ### 3.20. mkrepo
 
 ```bash
-udocker mkrepo DIRECTORY
+kooker mkrepo DIRECTORY
 ```
 
-Creates a udocker local repository in specify directory other than
-the default one ($HOME/.udocker). Can be used to place the containers
+Creates a kooker local repository in specify directory other than
+the default one ($HOME/.kooker). Can be used to place the containers
 in another filesystem. The created repository can then be accessed
-with `udocker --repo=DIRECTORY COMMAND`.
+with `kooker --repo=DIRECTORY COMMAND`.
 
 Examples:
 
 ```bash
-udocker mkrepo /tmp/myrepo
-udocker --repo=/tmp/myrepo pull docker.io/fedora/memcached
-udocker --repo=/tmp/myrepo images
+kooker mkrepo /tmp/myrepo
+kooker --repo=/tmp/myrepo pull docker.io/fedora/memcached
+kooker --repo=/tmp/myrepo images
 ```
 
 ### 3.21. run
 
 ```bash
-udocker run [OPTIONS] CONTAINER-ID|CONTAINER-NAME
-udocker run [OPTIONS] REPO/IMAGE:TAG
+kooker run [OPTIONS] CONTAINER-ID|CONTAINER-NAME
+kooker run [OPTIONS] REPO/IMAGE:TAG
 ```
 
 Executes a container. The execution several execution engines are
@@ -610,13 +610,13 @@ name, in this case the image is extracted and run is invoked over the
 newly extracted container. Using this later approach will create multiple
 container directory trees possibly occupying considerable disk space,
 therefore the recommended approach is to first extract a container using
-`udocker create` and only then execute with `udocker run`. The same
+`kooker create` and only then execute with `kooker run`. The same
 extracted container can then be executed as many times as required without
 duplication.
 
-udocker provides several execution modes to support the actual execution
+kooker provides several execution modes to support the actual execution
 within a container. Execution modes can be changed using the command
-`udocker setup --execmode=<mode> <container-id>` for more information
+`kooker setup --execmode=<mode> <container-id>` for more information
 on available modes and their characteristics see section 3.27.
 
 Options:
@@ -630,7 +630,7 @@ Options:
 * `--env-file=FILE` load environment variables from file
 * `--hostauth` obtain user account from the host and add it to the container passwd and group
 * `--containerauth` use the container passwd and group directly without binding files
-* `--nosysdirs` prevent udocker from mapping /proc /sys /run and /dev inside the container
+* `--nosysdirs` prevent kooker from mapping /proc /sys /run and /dev inside the container
 * `--nometa` ignore the container metadata settings
 * `--hostenv` pass the user host environment to the container
 * `--cpuset-cpus=<1,2-3>` CPUs in which to allow execution
@@ -655,52 +655,52 @@ Examples:
 
 ```bash
 # Pull fedora from Docker Hub
-udocker pull fedora:29
+kooker pull fedora:29
 
 # create the container named myfed from the image named fedora
-udocker create --name=myfed  fedora:29
+kooker create --name=myfed  fedora:29
 
 # execute a cat inside of the container
-udocker run  myfed  cat /etc/redhat-release
+kooker run  myfed  cat /etc/redhat-release
 
 # The above three operations can be done with a single command
-# However each time udocker is invoked in this way a new container
+# However each time kooker is invoked in this way a new container
 # directory tree is created. This will consume additional space
 # and may considerably increase the time for the container to start.
-udocker run fedora:29 cat /etc/redhat-release
+kooker run fedora:29 cat /etc/redhat-release
 
 # For repeated invocations of the same container image the issue
 # described above can be prevented by using --pull=reuse with --name.
-# With the option --pull=reuse udocker will first try to execute
+# With the option --pull=reuse kooker will first try to execute
 # a container with the same name specified by --name and only if
 # it doesn't exist will it pull and create. In this way repeated
 # calls to run only create a single container that is then reused.
-udocker run --name=F29 --pull=reuse fedora:29 cat /etc/redhat-release
+kooker run --name=F29 --pull=reuse fedora:29 cat /etc/redhat-release
 
 # In this example the host /tmp is mapped to the container /tmp
-udocker run --volume=/tmp  myfed  /bin/bash
+kooker run --volume=/tmp  myfed  /bin/bash
 
 # Same as above but running something in /tmp
-udocker run  -v=/tmp  myfed  /bin/bash -c "cd /tmp; ./myscript.sh"
+kooker run  -v=/tmp  myfed  /bin/bash -c "cd /tmp; ./myscript.sh"
 
 # Run binding a host directory inside the container to make it available
 # The host $HOME is mapped to /home/user inside the container
 # The shortest -v form is used instead of --volume=
 # The option -w same as --workdir is used to change dir to /home/user
-udocker run -v=$HOME:/home/user -w=/home/user myfed  /bin/bash
+kooker run -v=$HOME:/home/user -w=/home/user myfed  /bin/bash
 
 # Install software inside the container
-udocker run  --user=root myfed  yum install -y firefox pulseaudio gnash-plugin
+kooker run  --user=root myfed  yum install -y firefox pulseaudio gnash-plugin
 
 # Run as certain uid:gid inside the container
-udocker run --user=1000:1001  myfed  /bin/id
+kooker run --user=1000:1001  myfed  /bin/id
 
 # Run firefox
-udocker run --bindhome --hostauth --hostenv \
+kooker run --bindhome --hostauth --hostenv \
     -v /sys -v /proc -v /var/run -v /dev --user=green --dri myfed  firefox
 
 # Run in a script
-udocker run ubuntu  /bin/bash <<EOF
+kooker run ubuntu  /bin/bash <<EOF
 cd /etc
 cat motd
 cat lsb-release
@@ -710,15 +710,15 @@ EOF
 # First search for the expression `myrepo` in quay.io
 # Second list the tags for a given image in quay.io
 # Third finally pull a given image:tag from quay.io
-udocker search quay.io/myrepo
-udocker search --list-tags quay.io/myrepository/myimage
-udocker pull quay.io/myrepository/myimage:v2.3.1
+kooker search quay.io/myrepo
+kooker search --list-tags quay.io/myrepository/myimage
+kooker pull quay.io/myrepository/myimage:v2.3.1
 
 # Run container in a given directory tree using the DEFAULT EXECUTION MODE
 # Below ROOT is the complete directory structure of the container operating system
-# This enables udocker to execute directory trees created by other tools
-# Much of the udocker functionality is not usable when using --location
-./udocker run --location=/tmp/u/containers/07b3226e-6513-3f85-884f-e3cfdd2fbc0e/ROOT
+# This enables kooker to execute directory trees created by other tools
+# Much of the kooker functionality is not usable when using --location
+./kooker run --location=/tmp/u/containers/07b3226e-6513-3f85-884f-e3cfdd2fbc0e/ROOT
 ```
 
 ### 3.22. Debug and Verbosity
@@ -728,26 +728,26 @@ Further debugging information can be obtaining by running with `-D`.
 Examples:
 
 ```bash
-udocker -D pull busybox:latest
-udocker -D run busybox:latest
+kooker -D pull busybox:latest
+kooker -D run busybox:latest
 ```
 
 The options `-q` or `--quiet` can be specified before each command
 to reduce verbosity. The verbosity level can also be specified by
 assigning a value between 0 and 5 to the environment variable
-`UDOCKER_LOGLEVEL`.
+`KOOKER_LOGLEVEL`.
 
 Examples:
 
 ```bash
-udocker -q run busybox:latest /bin/ls
-UDOCKER_LOGLEVEL=2 udocker run busybox:latest /bin/ls
+kooker -q run busybox:latest /bin/ls
+KOOKER_LOGLEVEL=2 kooker run busybox:latest /bin/ls
 ```
 
 ### 3.23. login
 
 ```bash
-udocker login [--username=USERNAME] [--password=PASSWORD | --password-stdin ] [--registry=REGISTRY]
+kooker login [--username=USERNAME] [--password=PASSWORD | --password-stdin ] [--registry=REGISTRY]
 ```
 
 Login into a Docker registry using v2 API. Only basic authentication
@@ -766,21 +766,21 @@ Examples:
 
 ```bash
 # To use dockerhub private repositories
-udocker login --username=xxxx --password=yyyy
+kooker login --username=xxxx --password=yyyy
 
 # To use a different container registry (the https:// is optional)
-udocker login --registry=https://hostname
+kooker login --registry=https://hostname
 username: xxxx
 password: ****
 
 # To use a private repository at AWS ECR
-aws ecr get-login-password --region eu-north-1 | udocker login --username=AWS --password-stdin --registry=000000000000.dkr.ecr.eu-north-1.amazonaws.com
+aws ecr get-login-password --region eu-north-1 | kooker login --username=AWS --password-stdin --registry=000000000000.dkr.ecr.eu-north-1.amazonaws.com
 ```
 
 ### 3.24. logout
 
 ```bash
-udocker logout [-a]
+kooker logout [-a]
 ```
 
 Delete the login credentials (username and password) stored by
@@ -795,15 +795,15 @@ Options:
 Examples:
 
 ```bash
-udocker logout
-udocker logout --registry="https://hostname:5000"
-udocker logout -a
+kooker logout
+kooker logout --registry="https://hostname:5000"
+kooker logout -a
 ```
 
 ### 3.25. clone
 
 ```bash
-udocker clone [--name=NAME] CONTAINER-ID|CONTAINER-NAME
+kooker clone [--name=NAME] CONTAINER-ID|CONTAINER-NAME
 ```
 
 Duplicate an existing container creating a complete replica. The replica receives a different CONTAINER-ID.
@@ -816,34 +816,34 @@ Options:
 Examples:
 
 ```bash
-udocker clone f24771be-f0bb-3046-80f0-db301e099517
-udocker clone --name=RED  f24771be-f0bb-3046-80f0-db301e099517
-udocker clone --name=RED  BLUE
+kooker clone f24771be-f0bb-3046-80f0-db301e099517
+kooker clone --name=RED  f24771be-f0bb-3046-80f0-db301e099517
+kooker clone --name=RED  BLUE
 ```
 
 ### 3.26. save
 
 ```bash
-udocker save -o IMAGE-FILE REPO/IMAGE:TAG
-udocker save -o - REPO/IMAGE:TAG
+kooker save -o IMAGE-FILE REPO/IMAGE:TAG
+kooker save -o - REPO/IMAGE:TAG
 ```
 
 Saves an image including all its layers and metadata to a tarball.
 The input is an image not a container, to produce a tarball of a
-container use export. The saved images can be read by udocker or Docker
+container use export. The saved images can be read by kooker or Docker
 using the command load.
 
 Examples:
 
 ```bash
-udocker save -o docker-image.tar centos:centos7
-udocker save -o - > docker-image.tar ubuntu:16.04 ubuntu:18.04 ubuntu:19.04
+kooker save -o docker-image.tar centos:centos7
+kooker save -o - > docker-image.tar ubuntu:16.04 ubuntu:18.04 ubuntu:19.04
 ```
 
 ### 3.27. setup
 
 ```bash
-udocker setup [--execmode=XY] [--force] [--nvidia] [--purge] CONTAINER-ID|CONTAINER-NAME
+kooker setup [--execmode=XY] [--force] [--nvidia] [--purge] CONTAINER-ID|CONTAINER-NAME
 ```
 
 With `--execmode` chooses an execution mode to define how a given container
@@ -855,7 +855,7 @@ libraries to the container.
 The option `--force` can be used both with `--execmode` and with `--nvidia` to
 force the setup of the container to the specified mode.
 The option `--purge` removes mount points, auxiliary files and directories
-created by udocker inside the container directory tree to support its execution.
+created by kooker inside the container directory tree to support its execution.
 It should only be invoked when there is no execution taking place as it may
 affect processes running in the container tree.
 
@@ -868,7 +868,7 @@ Options:
   transferred to a remote host while in one of the Fn modes. Can be
   used with --nvidia.
 * `--purge` remove mount points, auxiliary files and directories created
-  by udocker to support the container execution.
+  by kooker to support the container execution.
 
 |Mode| Engine      | Description                               | Changes container
 |----|:------------|:------------------------------------------|:------------------
@@ -890,7 +890,7 @@ The mode P2 also uses PRoot and although has lower performance than P1
 can be more reliable. The mode P1 uses PRoot with
 SECCOMP syscall filtering which provides higher performance in most
 operating systems. PRoot provides the most universal execution mode
-in udocker but may also exhibit lower performance on older kernels
+in kooker but may also exhibit lower performance on older kernels
 such as in CentOS 6 systems.
 The Pn modes also offer root emulation to facilitate software installation
 and to execute applications that expect to run under root.
@@ -899,7 +899,7 @@ The Fakechroot (Fn), runC (Rn) and Singularity (Sn) engines are EXPERIMENTAL.
 They provide higher performance in most cases, but are less universal thus
 supporting less Linux distributions.
 
-The udocker Fakechroot engine has four modes that offer increasing
+The kooker Fakechroot engine has four modes that offer increasing
 compatibility levels. F1 is the least intrusive mode and only changes
 absolute symbolic links so that they point to locations inside the
 container.  F2 adds changes to the loader to prevent loading of host
@@ -922,18 +922,18 @@ it will not work on some distributions (e.g. CentOS 6 and CentOS 7).
 The rootless execution modes have inherent limitations related to the
 manipulation of uids and gids that may cause certain operations to fail
 such as software installations. To overcome this limitation of the R1
-execution mode, udocker provides the R2 and R3 execution modes that
+execution mode, kooker provides the R2 and R3 execution modes that
 combine runc with the proot uid/gid emulation. In these modes the
 execution chain is:
 
  `runc -> proot -> executable`
 
-When using the Rn modes, udocker will search for a runc executable in the
+When using the Rn modes, kooker will search for a runc executable in the
 host system, only if it does not find one it will default to use the runc
-provided with the udocker tools. This behavior can be change through
+provided with the kooker tools. This behavior can be change through
 environment variables and configuration settings.
 Fakechroot requires libraries compiled for each guest operating system,
-udocker provides these libraries for several distributions including
+kooker provides these libraries for several distributions including
 Ubuntu 14, Ubuntu 16, Ubuntu 18, CentOS 6 and CentOS 7 and some others.
 Other guests may or may not work with these same libraries.
 
@@ -947,7 +947,7 @@ Newer versions of Singularity may run without requiring privileges but
 need a recent kernel in the host system with support for rootless user
 mode namespaces similar to runc in mode R1.
 Singularity cannot be compiled statically due to dependencies on
-dynamic libraries and therefore is not shipped with udocker.
+dynamic libraries and therefore is not shipped with kooker.
 In CentOS 6 and CentOS 7 Singularity must be installed with privileges
 by a system administrator as it requires suid or capabilities.
 The S1 mode also offers root emulation to facilitate software installation
@@ -956,32 +956,32 @@ and to execute applications that expected to run under root.
 Examples:
 
 ```bash
-udocker create --name=mycontainer  fedora:25
+kooker create --name=mycontainer  fedora:25
 
-udocker setup --execmode=F3  mycontainer
-udocker setup  mycontainer                 # prints the execution mode
+kooker setup --execmode=F3  mycontainer
+kooker setup  mycontainer                 # prints the execution mode
 
-udocker run  mycontainer /bin/ls
+kooker run  mycontainer /bin/ls
 
-udocker setup  --execmode=F4  mycontainer
-udocker run  mycontainer /bin/ls
+kooker setup  --execmode=F4  mycontainer
+kooker run  mycontainer /bin/ls
 
-udocker setup  --execmode=P1  mycontainer
-udocker run  mycontainer  /bin/ls
+kooker setup  --execmode=P1  mycontainer
+kooker run  mycontainer  /bin/ls
 
-udocker setup  --execmode=R1  mycontainer
-udocker run  mycontainer  /bin/ls
+kooker setup  --execmode=R1  mycontainer
+kooker run  mycontainer  /bin/ls
 
-udocker setup  --execmode=S1  mycontainer
-udocker run  mycontainer  /bin/ls
+kooker setup  --execmode=S1  mycontainer
+kooker run  mycontainer  /bin/ls
 ```
 
-The default execution mode of udocker can also be changed. This has however
+The default execution mode of kooker can also be changed. This has however
 several limitations, therefore the recommended method to change the execution
-mode is via the `udocker setup` command. The default execution mode can be
+mode is via the `kooker setup` command. The default execution mode can be
 changed through the configuration files by changing the attribute
 **default_execution_mode** or through the environment variable
-**UDOCKER_DEFAULT_EXECUTION_MODE**. Only the following modes can be used as
+**KOOKER_DEFAULT_EXECUTION_MODE**. Only the following modes can be used as
 default modes:
 **P1**, **P2**, **F1**, **S1**, and **R1**. Changing the default execution
 mode can be useful if the default does not work as expected.
@@ -989,32 +989,32 @@ mode can be useful if the default does not work as expected.
 Example:
 
 ```bash
-UDOCKER_DEFAULT_EXECUTION_MODE=P2 ./udocker run mycontainer /bin/ls
+KOOKER_DEFAULT_EXECUTION_MODE=P2 ./kooker run mycontainer /bin/ls
 ```
 
 ### 3.28. tag
 
 ```bash
-udocker tag SOURCEREPO/IMAGE:TAG  TARGETREPO/IMAGE:TAG
+kooker tag SOURCEREPO/IMAGE:TAG  TARGETREPO/IMAGE:TAG
 ```
 
 Creates a new image tag from an existing source image. The newly created
 image tag is a replica of the source image. The source image can be removed
 or further updated via pull without affecting the newly created tag. A
 new tag does not occupy additional space as the image layers are shared.
-The image layers are only removed from the local udocker repository when
+The image layers are only removed from the local kooker repository when
 no other image is referencing them.
 
 Example:
 
 ```bash
-udocker tag centos:centos7  mycentos:mycentos7
+kooker tag centos:centos7  mycentos:mycentos7
 ```
 
 ### 3.29. manifest inspect
 
 ```bash
-udocker manifest inspect REPO/IMAGE:TAG
+kooker manifest inspect REPO/IMAGE:TAG
 ```
 
 Obtain and print information about an IMAGE manifest from a remote registry.
@@ -1030,30 +1030,30 @@ Options:
 Example:
 
 ```bash
-udocker manifest inspect centos:centos7
-udocker manifest --platform=linux/ppc64le inspect centos:7
+kooker manifest inspect centos:centos7
+kooker manifest --platform=linux/ppc64le inspect centos:7
 ```
 
 ## 4. Running MPI jobs
 
 In this section we will use the Lattice QCD simulation software openQCD to
-demonstrate how to run Open MPI applications with udocker
+demonstrate how to run Open MPI applications with kooker
 (<http://luscher.web.cern.ch/luscher/openQCD>). Lattice QCD simulations are
 performed on high-performance parallel computers with hundreds and thousands
 of processing units. All the software environment that is needed for openQCD
 is a compliant C compiler and a local MPI installation such as Open MPI.
 
-In what follows we describe the steps to execute openQCD using udocker in a
+In what follows we describe the steps to execute openQCD using kooker in a
 HPC system with a batch system (e.g. SLURM). An analogous procedure can be
 followed for other MPI applications.
 
 A container image of openQCD can be downloaded from the Docker Hub repository.
-From this image a container can be extracted to the filesystem (using udocker
+From this image a container can be extracted to the filesystem (using kooker
 create) as described below.
 
 ```bash
-./udocker pull iscampos/openqcd
-./udocker create --name=openqcd iscampos/openqcd
+./kooker pull iscampos/openqcd
+./kooker create --name=openqcd iscampos/openqcd
 fbeb130b-9f14-3a9d-9962-089b4acf3ea8
 ```
 
@@ -1061,7 +1061,7 @@ Next the created container is executed (notice that the variable
 `LD_LIBRARY_PATH` is explicitly set):
 
 ```bash
-./udocker run -e LD_LIBRARY_PATH=/usr/lib openqcd /bin/bash
+./kooker run -e LD_LIBRARY_PATH=/usr/lib openqcd /bin/bash
 ```
 
 In this approach the host mpiexec will submit the N MPI process instances, as
@@ -1133,13 +1133,13 @@ make
 make install
 ```
 
-OpenQCD can then be compiled inside the udocker container in the usual way.
+OpenQCD can then be compiled inside the kooker container in the usual way.
 The MPI job submission to the HPC cluster succeeds by including this line in
 the batch script:
 
 ```bash
 /opt/cesga/openmpi/2.0.1/gcc/6.3.0/bin/mpiexec -np 128 \
-  $LUSTRE/udocker-master/udocker run -e LD_LIBRARY_PATH=/usr/lib  \
+  $LUSTRE/kooker-master/kooker run -e LD_LIBRARY_PATH=/usr/lib  \
   --hostenv --hostauth --user=cscdiica -v /tmp \
   --workdir=/op/projects/openQCD-1.6/main openqcd \
   /opt/projects/openQCD-1.6/main/ym1 -i ym1.in -noloc
@@ -1150,7 +1150,7 @@ the batch script:
 Notice that depending on the application and host operating system a variable
 performance degradation may occur when using the default execution mode (Pn). In
 this situation other execution modes (such as Fn) may provide significantly higher
-performance. The command `udocker setup --execmode=<mode> <container-id>` can be used to change
+performance. The command `kooker setup --execmode=<mode> <container-id>` can be used to change
 between execution modes (see section 3.25).
 
 ## 5. Accessing GP/GPUs
@@ -1159,7 +1159,7 @@ The host (either the physical machine or VM) where the container will run has to
 the NVIDIA driver installed. Moreover, the NVIDIA driver version has to be known apriori,
 since the docker image has to have the exact same version as the host
 
-The command `udocker setup --nvidia <container-id>` can be used to prepare the
+The command `kooker setup --nvidia <container-id>` can be used to prepare the
 container with the drivers necessary to run with nvidia GPGPUs. This will copy
 the required files from the host into the container.
 
@@ -1181,27 +1181,27 @@ Examples of using those NVIDIA base images with a given application are the "dis
 
 In order to build your docker image with a given CUDA or OpenCL application, the
 aforementioned images can be used. When the docker image with your application has
-been built you can run udocker with that image as described in the previous sections.
+been built you can run kooker with that image as described in the previous sections.
 
-## 6. Accessing and transferring udocker containers
+## 6. Accessing and transferring kooker containers
 
-In udocker, images and containers are stored in the filesystem
-usually in the user home directory under $HOME/.udocker. If this location is in
+In kooker, images and containers are stored in the filesystem
+usually in the user home directory under $HOME/.kooker. If this location is in
 a shared filesystem such as in a computing farm or cluster then the content will
 be seen by all the hosts mounting the filesystem and can be used transparently by
-udocker across these hosts. If the home directory is not shared but some other
-location is, then you may point the `UDOCKER_DIR` environment variable to such a
-location and use it to store the udocker installation, including udocker tools,
+kooker across these hosts. If the home directory is not shared but some other
+location is, then you may point the `KOOKER_DIR` environment variable to such a
+location and use it to store the kooker installation, including kooker tools,
 images and containers.
 
 ### 6.1. Directory structure
 
-The directory structure of `.udocker` (or `UDOCKER_DIR`) is a as follows:
+The directory structure of `.kooker` (or `KOOKER_DIR`) is a as follows:
 
 * `doc/` documentation and licenses
-* `bin/` udocker executables
-* `lib/` udocker libraries
-* `repos/` images pulled or imported by udocker
+* `bin/` kooker executables
+* `lib/` kooker libraries
+* `repos/` images pulled or imported by kooker
 * `layers` image layers so that they can be shared by several images saving space
 * `containers/` containers extracted from images or imported
 
@@ -1209,13 +1209,13 @@ For a given container its directory pathname in the filesystem can be obtained
 as follows:
 
 ```bash
-udocker inspect -p ubuntu17
-/home/user01/.udocker/containers/feb0041d-e1b6-3eee-89d8-2d0617feb13a/ROOT
+kooker inspect -p ubuntu17
+/home/user01/.kooker/containers/feb0041d-e1b6-3eee-89d8-2d0617feb13a/ROOT
 ```
 
 The pathname in the example is the root of the container filesystem tree.
 Below **ROOT** you will find all the files that comprise the container. Upon
-execution udocker performs a chroot like operation into this directory.
+execution kooker performs a chroot like operation into this directory.
 You can modify, add, remove files below this location and upon execution
 these changes will be seen inside the container.
 This can be used to place or retrieve files to/from the container.
@@ -1233,53 +1233,53 @@ Across isolated hosts the correct way to transfer containers is to pull them fro
 a repository such as Docker Hub. However this may implies slow downloads from remote
 locations and also the need to create the container again from the pulled image.
 
-udocker provides limited support for loading images and importing containers.
+kooker provides limited support for loading images and importing containers.
 Containers exported to a file by Docker with `docker export` can be imported by
-udocker using:
+kooker using:
 
-* `udocker import CONTAINER-FILE  NEWIMAGE:NEWTAG` import the
+* `kooker import CONTAINER-FILE  NEWIMAGE:NEWTAG` import the
    container file into a new image (not into a new container).
-* `udocker import --tocontainer CONTAINER-FILE` import the
+* `kooker import --tocontainer CONTAINER-FILE` import the
    container file directly into a new container (without creating an image).
-   This is udocker specific.
-* `udocker import --tocontainer --clone CONTAINER-FILE` import the
+   This is kooker specific.
+* `kooker import --tocontainer --clone CONTAINER-FILE` import the
    container file directly into a new container (without creating an image).
-   This assumes the container was initially exported by udocker with
-   `udocker export --clone` and thus contains not only the ROOT tree of
-   the container but also all metadata, and control files of udocker.
-   This is udocker specific.
+   This assumes the container was initially exported by kooker with
+   `kooker export --clone` and thus contains not only the ROOT tree of
+   the container but also all metadata, and control files of kooker.
+   This is kooker specific.
 
-Images saved by Docker using `docker save` can be imported by udocker using
-`udocker load`. Images in OCI format can also be loaded by udocker using
-`udocker load`, the format will be automatically detected.
+Images saved by Docker using `docker save` can be imported by kooker using
+`kooker load`. Images in OCI format can also be loaded by kooker using
+`kooker load`, the format will be automatically detected.
 
-udocker can also save images in a Docker compliant format using `udocker save`.
+kooker can also save images in a Docker compliant format using `kooker save`.
 
 ### 6.3. Manual transfer
 
 The example below shows a container named MyContainer being manually transferred
-to another host and executed. Make sure the udocker executable is in your PATH on
+to another host and executed. Make sure the kooker executable is in your PATH on
 both the local and remote hosts.
 
 ```bash
-export MYC_ROOT=$(udocker inspect -p MyContainer)
+export MYC_ROOT=$(kooker inspect -p MyContainer)
 export MYC_PATH=$(dirname $MYC_ROOT)
 export MYC_ID=$(basename $MYC_PATH)
 export MYC_DIR=$(dirname $MYC_PATH)
 cd $MYC_DIR; tar cvf - $MYC_ID | ssh user@ahost \
-  "udocker install ; cd ~/.udocker/containers; tar xf -"
-ssh user@ahost "udocker name $MYC_ID MyContainer; udocker run MyContainer"
+  "kooker install ; cd ~/.kooker/containers; tar xf -"
+ssh user@ahost "kooker name $MYC_ID MyContainer; kooker run MyContainer"
 ```
 
 ## 7. Running as root inside containers
 
 The behavior and capabilities of running as root inside the containers
-depends on the execution mode. In the Pn and Rn modes udocker will run
+depends on the execution mode. In the Pn and Rn modes kooker will run
 as root. In other modes execution as root is achieved by invoking
 run with the `--user=root` option:
 
 ```bash
-udocker run --user=root <container-id>
+kooker run --user=root <container-id>
 ```
 
 ### 7.1. Running as root in Pn modes
@@ -1308,7 +1308,7 @@ files */etc/subuid* and */etc/subgid* which require system administrator
 intervention to be configured. They assign a range of UIDs and GIDs for each
 user to be used within the *user namespaces*.
 To overcome some of the root limitations when running inside *user namespaces*,
-udocker offers an overlay execution of proot inside runc through the execution
+kooker offers an overlay execution of proot inside runc through the execution
 modes R2 and R3. In these modes proot is used to overcome some of the UID and
 GID issues while still enabling the benefits of isolation and root execution
 inside de *user namespaces*.
@@ -1316,19 +1316,19 @@ inside de *user namespaces*.
 ### 7.4. Running as root in Sn modes
 
 The Sn (singularity) execution modes default to run as normal unprivileged
-user. Running as "root" can be achieved with `udocker run --user=root <container-id>`.
+user. Running as "root" can be achieved with `kooker run --user=root <container-id>`.
 Execution within singularity requires *namespaces* and can operate in two
 different manners. In older distributions and kernels singularity must be installed
 by the system administrator with privileges. In more recent distributions and
 kernels singularity can operate similarly to runc and crun and take advantage of the
 *user namespaces*. In this later case UID/GID entries might also be required in
 */etc/subuid* and */etc/subgid*.
-Singularity is not packaged with the udocker tools tarball, but udocker can exploit
-existing singularity installations to run the udocker containers.
+Singularity is not packaged with the kooker tools tarball, but kooker can exploit
+existing singularity installations to run the kooker containers.
 
 ### 7.5. Summary of running as root
 
-The following table provides a summary of running as root within udocker:
+The following table provides a summary of running as root within kooker:
 
 |Mode| Engine      | Running as root
 |----|:------------|:--------------------------------------------------------------
@@ -1346,16 +1346,16 @@ The following table provides a summary of running as root within udocker:
 ### 7.6. Running as root for software installation
 
 Most applications and services can be run without running as root.
-However running as root within udocker can be useful to install software packages.
+However running as root within kooker can be useful to install software packages.
 Depending on the execution mode, running as root may imply additional
 overheads and/or security considerations.
 
 If the software installation will need to create/change users and groups then
-udocker needs to run with direct access to the container passwd and group files
+kooker needs to run with direct access to the container passwd and group files
 as follows:
 
 ```bash
-udocker run --user=root --containerauth <CONTAINER-ID>
+kooker run --user=root --containerauth <CONTAINER-ID>
 ```
 
 For **software installation** the recommended execution modes are **P2**, **S1**
@@ -1369,23 +1369,23 @@ apt-get -o APT::Sandbox::User=root install <package>
 
 Upon APT errors such as `cannot get security labeling handle: No such file or directory`
 try to run as mentioned above using **P2** mode, but not mounting /sys from the host by
-starting udocker as:
+starting kooker as:
 
 ```bash
-udocker.py run --user=root --nosysdirs -v /etc/resolv.conf -v /dev \
+kooker.py run --user=root --nosysdirs -v /etc/resolv.conf -v /dev \
   --containerauth <CONTAINER-ID>
 ```
 
 ## 8. Nested execution
 
-udocker as not been designed for nested executions, meaning execution
+kooker as not been designed for nested executions, meaning execution
 of containers within containers. However there are successful examples of using
-udocker in such scenarios such as [SCAR](https://github.com/grycap/scar).
+kooker in such scenarios such as [SCAR](https://github.com/grycap/scar).
 
-For running inside docker and similar: udocker offers the **Fn** mode which
+For running inside docker and similar: kooker offers the **Fn** mode which
 enables execution within docker or other Linux namespaces based applications.
 
-For running udocker within udocker itself the following guidelines apply:
+For running kooker within kooker itself the following guidelines apply:
 
 * Fn within Pn: Possible
 * Pn within Rn: Possible only in R1
@@ -1415,30 +1415,30 @@ considerations may hold:
 
 ## 10. Hardware architectures
 
-The udocker Python code has the built-in logic to support several hardware
+The kooker Python code has the built-in logic to support several hardware
 architectures namely i386, x86_64, arm (32 bit) and aarch64 (arm 64 bit).
 However the required engine binaries and/or libraries must also be provided
 for each of the architectures. Currently only some modes have compiled
 binaries to support execution on x86, x86_64, ARM, ARM64 and
 ppc64le. The executables and libraries for the execution engines shipped
-with udocker have a suffix that identifies the architecture, check the
-relevant udocker installation directories usually `$HOME/.udocker/bin`
-and `$HOME/.udocker/lib`.
+with kooker have a suffix that identifies the architecture, check the
+relevant kooker installation directories usually `$HOME/.kooker/bin`
+and `$HOME/.kooker/lib`.
 
-Users may compile the same executables shipped in the udockertools in
+Users may compile the same executables shipped in the kookertools in
 their linux hosts to support different or newer distributions, and/or
 architectures. See the [installation manual](installation_manual.md)
 for further information.
 
 Checking which architectures are supported by a given container can
-be verified using `udocker manifest inspect IMAGE`. If the intended architecture
-is available it can be pulled using `udocker pull --platform=OS/ARCH`.
+be verified using `kooker manifest inspect IMAGE`. If the intended architecture
+is available it can be pulled using `kooker pull --platform=OS/ARCH`.
 
 ```bash
-udocker manifest inspect centos:7
-udocker pull --platform=linux/arm64 centos:7
-udocker create --name=C7 centos:7
-udocker run C7
+kooker manifest inspect centos:7
+kooker pull --platform=linux/arm64 centos:7
+kooker create --name=C7 centos:7
+kooker run C7
 ```
 
 In general, if the binaries in the container have been compiled for
@@ -1446,7 +1446,7 @@ an architecture that is different from the host then the execution
 will not be possible. However, execution may still be possible provided
 that `qemu-user` is locally installed. In many distributions `qemu-user`
 is provided by the package `qemu-user-static`. In such case the default
-engine of udocker Pn will automatically use the qemu emulation to support
+engine of kooker Pn will automatically use the qemu emulation to support
 the execution. Since the architecture is emulated the execution will be
 much slower. Emulation for the Fn modes may also work if the `qemu-user`
 binaries are both installed and also appear in `/proc/sys/fs/binfmt_misc/`.
@@ -1455,37 +1455,37 @@ binaries are both installed and also appear in `/proc/sys/fs/binfmt_misc/`.
 
 ### 11.1. Termux
 
-udocker can be used with Termux on Android, the only mode currently supported
+kooker can be used with Termux on Android, the only mode currently supported
 is **P** using PRoot. It is recommended to install and use the proot binary
 provided by Termux which is adapted to the Termux Android environment.
 
 ```bash
-export UDOCKER_USE_PROOT_EXECUTABLE=$(which proot)
-udocker run arm64v8/fedora:35
+export KOOKER_USE_PROOT_EXECUTABLE=$(which proot)
+kooker run arm64v8/fedora:35
 ```
 
 ### 11.2. Google Colab
 
-udocker can run on Google Colab using the **P** or **F** modes.
+kooker can run on Google Colab using the **P** or **F** modes.
 
 ```bash
-! pip install udocker
-! udocker install
-! udocker --allow-root pull centos:centos7
-! udocker --allow-root create --name=c7 centos:centos7
-! udocker --allow-root run c7
+! pip install kooker
+! kooker install
+! kooker --allow-root pull centos:centos7
+! kooker --allow-root create --name=c7 centos:centos7
+! kooker --allow-root run c7
 ```
 
 ### 11.3. Docker
 
-udocker can be used to execute containers within Docker, the only mode currently
+kooker can be used to execute containers within Docker, the only mode currently
 supported is **F** using Fakechroot.
 
 ```bash
-udocker --allow-root pull ubuntu:18.04
-udocker --allow-root create --name=ub18 ubuntu:18.04
-udocker --allow-root setup --execmode=F3 ub18
-udocker --allow-root run ub18
+kooker --allow-root pull ubuntu:18.04
+kooker --allow-root create --name=ub18 ubuntu:18.04
+kooker --allow-root setup --execmode=F3 ub18
+kooker --allow-root run ub18
 ```
 
 ## 12. Issues
@@ -1494,7 +1494,7 @@ Containers should only be copied for transfer when they are in the execution
 modes Pn or Rn. The modes Fn perform changes to the containers that will make
 them fail if they are execute in a different host where the absolute pathname
 to the container location is different. In this later case convert back to P1
-(using:  `udocker setup --execmode=P1`) before performing the backup. Sharing
+(using:  `kooker setup --execmode=P1`) before performing the backup. Sharing
 of containers can be done across hosts in an homogeneous cluster or between
 hosts with the very same directory structure.
 

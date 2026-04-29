@@ -1,4 +1,4 @@
-## udocker documentation
+## kooker documentation
 
 * [Installation manual](installation_manual.md)
 * [User manual](user_manual.md)

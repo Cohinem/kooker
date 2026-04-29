@@ -2,15 +2,15 @@
 
 # -*- coding: utf-8 -*-
 """
-udocker unit tests: DockerIoAPI
+kooker unit tests: DockerIoAPI
 """
 
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
 from io import BytesIO as strio
-from udocker.config import Config
-from udocker.docker import DockerIoAPI
-from udocker.utils.curl import GetURLpyCurl
+from kooker.config import Config
+from kooker.docker import DockerIoAPI
+from kooker.utils.curl import GetURLpyCurl
 import collections
 
 collections.Callable = collections.abc.Callable
@@ -24,7 +24,7 @@ class DockerIoAPITestCase(TestCase):
 
     def setUp(self):
         Config().getconf()
-        str_local = 'udocker.container.localrepo.LocalRepository'
+        str_local = 'kooker.container.localrepo.LocalRepository'
         self.lrepo = patch(str_local)
         self.local = self.lrepo.start()
         self.mock_lrepo = Mock()
@@ -33,7 +33,7 @@ class DockerIoAPITestCase(TestCase):
     def tearDown(self):
         self.lrepo.stop()
 
-    @patch('udocker.docker.GetURL')
+    @patch('kooker.docker.GetURL')
     def test_01_init(self, mock_geturl):
         """Test01 DockerIoAPI() constructor"""
         mock_geturl.return_value = None
@@ -51,7 +51,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertFalse(doia.search_ended)
         self.assertTrue(mock_geturl.called)
 
-    @patch('udocker.docker.GetURL')
+    @patch('kooker.docker.GetURL')
     def test_02_set_proxy(self, mock_geturl):
         """Test02 DockerIoAPI().set_proxy()."""
         url = "socks5://user:pass@host:port"
@@ -59,21 +59,21 @@ class DockerIoAPITestCase(TestCase):
         doia.set_proxy(url)
         self.assertTrue(mock_geturl.return_value.set_proxy.called)
 
-    @patch('udocker.docker.GetURL')
+    @patch('kooker.docker.GetURL')
     def test_03_set_registry(self, mock_geturl):
         """Test03 DockerIoAPI().set_registry()."""
         doia = DockerIoAPI(self.local)
         doia.set_registry("https://registry-1.docker.io")
         self.assertEqual(doia.registry_url, "https://registry-1.docker.io")
 
-    @patch('udocker.docker.GetURL')
+    @patch('kooker.docker.GetURL')
     def test_04_set_index(self, mock_geturl):
         """Test04 DockerIoAPI().set_index()."""
         doia = DockerIoAPI(self.local)
         doia.set_index("https://index.docker.io/v1")
         self.assertEqual(doia.index_url, "https://index.docker.io/v1")
 
-    @patch('udocker.docker.GetURL')
+    @patch('kooker.docker.GetURL')
     def test_05_is_repo_name(self, mock_geturl):
         """Test05 DockerIoAPI().is_repo_name()."""
         doia = DockerIoAPI(self.local)
@@ -87,8 +87,8 @@ class DockerIoAPITestCase(TestCase):
         self.assertTrue(doia.is_repo_name("lipcomputing/os-cli-centos7:latest"))
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.GetURL.get_status_code')
-    @patch('udocker.docker.GetURL.get')
+    @patch('kooker.docker.GetURL.get_status_code')
+    @patch('kooker.docker.GetURL.get')
     def test_06__get_url(self, mock_get, mock_getstatus, mock_gupycurl):
         """Test06 DockerIoAPI()._get_url()."""
         mock_gupycurl.return_value = True
@@ -134,10 +134,10 @@ class DockerIoAPITestCase(TestCase):
 
     @patch.object(GetURLpyCurl, 'is_available')
     @patch.object(DockerIoAPI, '_get_url')
-    @patch('udocker.docker.GetURL.get_status_code')
-    @patch('udocker.docker.FileUtil.size')
-    @patch('udocker.docker.GetURL.get_content_length')
-    @patch('udocker.docker.ChkSUM.hash')
+    @patch('kooker.docker.GetURL.get_status_code')
+    @patch('kooker.docker.FileUtil.size')
+    @patch('kooker.docker.GetURL.get_content_length')
+    @patch('kooker.docker.ChkSUM.hash')
     def test_07__get_file(self, mock_hash, mock_getlength,
                           mock_fusize, mock_status, mock_geturl, mock_gupycurl):
         """Test07 DockerIoAPI()._get_file()."""
@@ -253,7 +253,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertFalse(status)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.json.loads')
+    @patch('kooker.docker.json.loads')
     @patch.object(DockerIoAPI, '_get_url')
     def test_11_get_v1_repo(self, mock_geturl, mock_jload, mock_gupycurl):
         """Test11 DockerIoAPI().get_v1_repo"""
@@ -288,8 +288,8 @@ class DockerIoAPITestCase(TestCase):
         self.assertEqual(out, "Not Empty")
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
-    @patch('udocker.utils.curl.CurlHeader')
+    @patch('kooker.docker.Msg')
+    @patch('kooker.utils.curl.CurlHeader')
     @patch.object(DockerIoAPI, '_get_url')
     def test_13_get_v1_image_tags(self, mock_dgu, mock_hdr, mock_msg,
                                   mock_gupycurl):
@@ -305,8 +305,8 @@ class DockerIoAPITestCase(TestCase):
         self.assertIsInstance(out, list)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
-    @patch('udocker.utils.curl.CurlHeader')
+    @patch('kooker.docker.Msg')
+    @patch('kooker.utils.curl.CurlHeader')
     @patch.object(DockerIoAPI, '_get_url')
     def test_14_get_v1_image_tag(self, mock_dgu, mock_hdr, mock_msg,
                                  mock_gupycurl):
@@ -323,8 +323,8 @@ class DockerIoAPITestCase(TestCase):
         self.assertIsInstance(out, tuple)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
-    @patch('udocker.utils.curl.CurlHeader')
+    @patch('kooker.docker.Msg')
+    @patch('kooker.utils.curl.CurlHeader')
     @patch.object(DockerIoAPI, '_get_url')
     def test_15_get_v1_image_ancestry(self, mock_dgu, mock_hdr, mock_msg,
                                       mock_gupycurl):
@@ -340,7 +340,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertIsInstance(out, tuple)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
+    @patch('kooker.docker.Msg')
     @patch.object(DockerIoAPI, '_get_file')
     def test_16_get_v1_image_json(self, mock_dgf, mock_msg, mock_gupycurl):
         """Test16 DockerIoAPI().get_v1_image_json"""
@@ -360,7 +360,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertFalse(status)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
+    @patch('kooker.docker.Msg')
     @patch.object(DockerIoAPI, '_get_file')
     def test_17_get_v1_image_layer(self, mock_dgf, mock_msg, mock_gupycurl):
         """Test17 DockerIoAPI().get_v1_image_layer"""
@@ -380,7 +380,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertFalse(status)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
+    @patch('kooker.docker.Msg')
     @patch.object(DockerIoAPI, '_get_file')
     def test_18_get_v1_layers_all(self, mock_dgf, mock_msg, mock_gupycurl):
         """Test18 DockerIoAPI().get_v1_layers_all"""
@@ -401,8 +401,8 @@ class DockerIoAPITestCase(TestCase):
 
     @patch.object(GetURLpyCurl, 'is_available')
     @patch.object(DockerIoAPI, '_get_url')
-    @patch('udocker.utils.curl.CurlHeader')
-    @patch('udocker.docker.json.loads')
+    @patch('kooker.utils.curl.CurlHeader')
+    @patch('kooker.docker.json.loads')
     def test_19__get_v2_auth(self, mock_jloads, mock_hdr, mock_dgu,
                              mock_gupycurl):
         """Test19 DockerIoAPI()._get_v2_auth"""
@@ -455,7 +455,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertEqual(doia.v2_auth_token, "BIG-FAT-TOKEN")
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.utils.curl.CurlHeader')
+    @patch('kooker.utils.curl.CurlHeader')
     @patch.object(DockerIoAPI, '_get_url')
     def test_22_is_v2(self, mock_dgu, mock_hdr, mock_gupycurl):
         """Test22 DockerIoAPI().is_v2"""
@@ -507,7 +507,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertTrue(out)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.json.loads')
+    @patch('kooker.docker.json.loads')
     @patch.object(DockerIoAPI, '_get_url')
     def test_24_get_v2_image_tags(self, mock_dgu, mock_jload, mock_gupycurl):
         """Test24 DockerIoAPI().get_v2_image_tags"""
@@ -540,8 +540,8 @@ class DockerIoAPITestCase(TestCase):
         self.assertEqual(out, ["tag1", "tag2"])
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
-    @patch('udocker.utils.curl.CurlHeader')
+    @patch('kooker.docker.Msg')
+    @patch('kooker.utils.curl.CurlHeader')
     @patch.object(DockerIoAPI, '_get_url')
     def test_25_get_v2_image_manifest(self, mock_dgu, mock_hdr, mock_msg,
                                       mock_gupycurl):
@@ -558,7 +558,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertIsInstance(out, tuple)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
+    @patch('kooker.docker.Msg')
     @patch.object(DockerIoAPI, '_get_file')
     def test_26_get_v2_image_layer(self, mock_dgf, mock_msg, mock_gupycurl):
         """Test26 DockerIoAPI().get_v2_image_layer"""
@@ -581,7 +581,7 @@ class DockerIoAPITestCase(TestCase):
         self.assertFalse(out)
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
+    @patch('kooker.docker.Msg')
     @patch.object(DockerIoAPI, 'get_v2_image_layer')
     def test_27_get_v2_layers_all(self, mock_v2il, mock_msg, mock_gupycurl):
         """Test27 DockerIoAPI().get_v2_layers_all"""
@@ -604,8 +604,8 @@ class DockerIoAPITestCase(TestCase):
         self.assertEqual(out, ['foolayername'])
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
-    @patch('udocker.docker.GetURL.get_status_code')
+    @patch('kooker.docker.Msg')
+    @patch('kooker.docker.GetURL.get_status_code')
     @patch.object(DockerIoAPI, 'get_v2_image_manifest')
     @patch.object(DockerIoAPI, 'get_v2_layers_all')
     @patch.object(DockerIoAPI, '_get_url')
@@ -695,8 +695,8 @@ class DockerIoAPITestCase(TestCase):
         self.assertEqual(out, "1234567890")
 
     @patch.object(GetURLpyCurl, 'is_available')
-    @patch('udocker.docker.Msg')
-    @patch('udocker.docker.GetURL.get_status_code')
+    @patch('kooker.docker.Msg')
+    @patch('kooker.docker.GetURL.get_status_code')
     @patch.object(DockerIoAPI, 'get_v1_layers_all')
     @patch.object(DockerIoAPI, 'get_v1_image_ancestry')
     @patch.object(DockerIoAPI, '_get_v1_id_from_images')
@@ -857,7 +857,7 @@ class DockerIoAPITestCase(TestCase):
 
     @patch.object(GetURLpyCurl, 'is_available')
     @patch.object(DockerIoAPI, '_get_url')
-    @patch('udocker.docker.json.loads')
+    @patch('kooker.docker.json.loads')
     def test_36_search_get_page_v1(self, mock_jload, mock_dgu,
                                    mock_gupycurl):
         """Test36 DockerIoAPI().set_index"""
@@ -879,7 +879,7 @@ class DockerIoAPITestCase(TestCase):
 
     @patch.object(GetURLpyCurl, 'is_available')
     @patch.object(DockerIoAPI, '_get_url')
-    @patch('udocker.docker.json.loads')
+    @patch('kooker.docker.json.loads')
     def test_37_search_get_page_v2(self, mock_jload, mock_dgu, mock_gupycurl):
         """Test37 DockerIoAPI().search_get_page_v2"""
         mock_gupycurl.return_value = True

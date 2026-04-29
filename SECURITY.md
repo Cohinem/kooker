@@ -8,9 +8,9 @@ Support is provided for both:
 
 ## Reporting a Vulnerability
 
-Report security issues with detailed information by emailing to udocker@lip.pt
+Report security issues with detailed information by emailing to kooker@lip.pt
 
-The udocker maintenance team will acknowledge your email within 72 hours,
+The kooker maintenance team will acknowledge your email within 72 hours,
 and will send a more detailed response within the following 48 hours indicating
 the next steps in handling the vulnerability. You will be kept informed of the
 progress towards both a complete solution or mitigation and public announcement

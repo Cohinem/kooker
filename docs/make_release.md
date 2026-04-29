@@ -1,4 +1,4 @@
-# Making a udocker release
+# Making a kooker release
 
 * Verify that the version is updated.
 * Update the `CHANGELOG.md`.
@@ -14,27 +14,27 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 * Test the new version.
 
 ```bash
-pip install --index-url https://test.pypi.org/simple/ udocker
+pip install --index-url https://test.pypi.org/simple/ kooker
 ```
 
 * If tests ok, upload to pypi, and check if you can install and run
 
 ```bash
 twine upload dist/*
-pip install udocker
-udocker version
+pip install kooker
+kooker version
 ```
 
 * Prepare a PR and check jenkins pipeline are ok, then approve
 
-* Make an independent tarball of udocker
+* Make an independent tarball of kooker
 
 ```bash
 cd utils
-./make_udockertar.sh
+./make_kookertar.sh
 cd ..
 ```
 
-* It produces udocker-x.y.z.tar.gz
+* It produces kooker-x.y.z.tar.gz
 * On github make a **new release** and upload this tarball, copy/paste text
   from other release.

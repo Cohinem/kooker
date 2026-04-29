@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""udocker Command Line Interface implementation"""
+"""kooker Command Line Interface implementation"""
 
 import os
 import sys
@@ -365,7 +365,7 @@ class UdockerCLI(object):
         import - <repo/image:tag>
         --mv                      :if possible move tar-file instead of copy
         --tocontainer             :import to container, no image is created
-        --clone                   :import udocker container format with metadata
+        --clone                   :import kooker container format with metadata
         --name=<container-name>   :with --tocontainer or --clone to add an alias
         --platform=os/arch        :docker platform
         """
@@ -756,7 +756,7 @@ class UdockerCLI(object):
         --entrypoint               :override the container metadata entrypoint
         --platform=os/arch         :pull image for OS and architecture
         --pull=<when>              :when to pull (missing|never|always|reuse)
-        --httpproxy=<proxy>        :use http proxy, see udocker pull --help
+        --httpproxy=<proxy>        :use http proxy, see kooker pull --help
 
         Only available in Rn execution modes:
         --device=/dev/xxx          :pass device to container (R1 mode only)
@@ -1242,7 +1242,7 @@ class UdockerCLI(object):
             most of the errors related to change of uid or gid
         R3: same as R2 but with proot accelerated mode disabled
         S1: singularity, requires a local installation of singularity,
-            if singularity is available in the PATH udocker will use
+            if singularity is available in the PATH kooker will use
             it to execute the container
         """
         container_id = cmdp.get("P1")
@@ -1290,7 +1290,7 @@ class UdockerCLI(object):
 
     def do_install(self, cmdp):
         """
-        install: install udocker and its tools
+        install: install kooker and its tools
         install [options]
         --force                    :force reinstall
         --purge                    :remove files (be careful)
@@ -1353,10 +1353,10 @@ class UdockerCLI(object):
         Msg().out(
             """
 Syntax:
-  udocker  [general_options] <command>  [command_options]  <command_args>
+  kooker  [general_options] <command>  [command_options]  <command_args>
 
-  udocker [-h|--help|help]        :Display this help and exits
-  udocker [-V|--version|version]  :Display udocker and tarball version and exits
+  kooker [-h|--help|help]        :Display this help and exits
+  kooker [-V|--version|version]  :Display kooker and tarball version and exits
 
 General options common to all commands must appear before the command:
   -D, --debug                   :Debug
@@ -1398,9 +1398,9 @@ Commands:
   verify <repo/image:tag>       :Verify a pulled image
   manifest inspect <repo/image:tag> :Print manifest metadata
 
-  udocker manifest inspect centos/centos8
-  udocker pull --platform=linux/arm64 centos/centos8
-  udocker tag centos/centos8  mycentos/centos8:arm64
+  kooker manifest inspect centos/centos8
+  kooker pull --platform=linux/arm64 centos/centos8
+  kooker tag centos/centos8  mycentos/centos8:arm64
 
   protect <repo/image:tag>      :Protect repository
   unprotect <repo/image:tag>    :Unprotect repository
@@ -1417,40 +1417,40 @@ Commands:
   logout                        :Logout from docker repository
 
 Examples:
-  udocker search expression
-  udocker search quay.io/expression
-  udocker search --list-tags myimage
-  udocker pull myimage:mytag
-  udocker images
-  udocker create --name=mycontainer  myimage:mytag
-  udocker ps -m -s
-  udocker inspect mycontainer
-  udocker inspect -p mycontainer
+  kooker search expression
+  kooker search quay.io/expression
+  kooker search --list-tags myimage
+  kooker pull myimage:mytag
+  kooker images
+  kooker create --name=mycontainer  myimage:mytag
+  kooker ps -m -s
+  kooker inspect mycontainer
+  kooker inspect -p mycontainer
 
-  udocker manifest inspect centos/centos8
-  udocker pull --platform=linux/arm64 centos/centos8
-  udocker tag centos/centos8  mycentos/centos8:arm64
+  kooker manifest inspect centos/centos8
+  kooker pull --platform=linux/arm64 centos/centos8
+  kooker tag centos/centos8  mycentos/centos8:arm64
 
-  udocker run  mycontainer  cat /etc/redhat-release
-  udocker run --hostauth --hostenv --bindhome  mycontainer
-  udocker run --user=root  mycontainer  yum install firefox
-  udocker run --hostauth --hostenv --bindhome mycontainer  firefox
-  udocker run --entrypoint="" mycontainer  /bin/bash -i
-  udocker run --entrypoint="/bin/bash" mycontainer -i
+  kooker run  mycontainer  cat /etc/redhat-release
+  kooker run --hostauth --hostenv --bindhome  mycontainer
+  kooker run --user=root  mycontainer  yum install firefox
+  kooker run --hostauth --hostenv --bindhome mycontainer  firefox
+  kooker run --entrypoint="" mycontainer  /bin/bash -i
+  kooker run --entrypoint="/bin/bash" mycontainer -i
 
-  udocker clone --name=anotherc mycontainer
-  udocker rm anotherc
+  kooker clone --name=anotherc mycontainer
+  kooker rm anotherc
 
-  udocker mkrepo /data/myrepo
-  udocker --repo=/data/myrepo load -i docker-saved-repo.tar
-  udocker --repo=/data/myrepo images
-  udocker --repo=/data/myrepo run --user=$USER  myimage:mytag
+  kooker mkrepo /data/myrepo
+  kooker --repo=/data/myrepo load -i docker-saved-repo.tar
+  kooker --repo=/data/myrepo images
+  kooker --repo=/data/myrepo run --user=$USER  myimage:mytag
 
-  udocker export -o myimage.tar mycontainer
-  udocker import myimage.tar mynewimage
-  udocker create --name=mynewc mynewimage
-  udocker export --clone -o mycontainer.tar mycontainer
-  udocker import --clone mycontainer.tar
+  kooker export -o myimage.tar mycontainer
+  kooker import myimage.tar mynewimage
+  kooker create --name=mynewc mynewimage
+  kooker export --clone -o mycontainer.tar mycontainer
+  kooker import --clone mycontainer.tar
 
 Notes:
  * by default the binaries, images and containers are placed in
@@ -1463,15 +1463,15 @@ Notes:
  * additional host directories to be mounted are specified with:
       run --volume=/data:/mnt --volume=/etc/hosts  <container>
       run --nosysdirs --volume=/dev --volume=/proc  <container>
- * udocker provides several execution modes that offer different
+ * kooker provides several execution modes that offer different
    approaches and technologies to execute containers, they
    can be selected using the setup command. See the setup help.
-      udocker setup --execmode=F3 fedx
-      udocker setup --execmode=R1 fedx
-      udocker setup --execmode=S1 fedx
-      udocker setup --help
- * udocker facilitates the usage of nvidia drivers within containers
-      udocker setup --nvidia fedx
+      kooker setup --execmode=F3 fedx
+      kooker setup --execmode=R1 fedx
+      kooker setup --execmode=S1 fedx
+      kooker setup --help
+ * kooker facilitates the usage of nvidia drivers within containers
+      kooker setup --nvidia fedx
 
 See: https://github.com/indigo-dc/udocker/blob/master/SUMMARY.md
             """)

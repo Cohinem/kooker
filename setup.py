@@ -74,6 +74,6 @@ setup(
     setup_requires=SETUP_REQUIREMENTS,
     test_suite='tests',
     tests_require=TEST_REQUIREMENTS,
-    url='https://github.com/indigo-dc/kooker',
+    url='https://github.com/indigo-dc/udocker',
     zip_safe=False,
 )

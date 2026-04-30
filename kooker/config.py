@@ -31,13 +31,13 @@ class Config(object):
     # the actual tarball used in the installation can have a higher version
     conf['tarball_release'] = "1.2.11"
     conf['tarball'] = (
-        "https://download.a.incd.pt/kooker/kooker-englib-1.2.11.tar.gz"
+        "https://download.a.incd.pt/udocker/udocker-englib-1.2.11.tar.gz"
         " "
         "https://raw.githubusercontent.com"
-        "/jorge-lip/kooker-builds/master/tarballs/kooker-englib-1.2.11.tar.gz"
+        "/jorge-lip/udocker-builds/master/tarballs/udocker-englib-1.2.11.tar.gz"
     )
     conf['installinfo'] = [
-        "https://raw.githubusercontent.com/indigo-dc/kooker/master/messages", ]
+        "https://raw.githubusercontent.com/indigo-dc/udocker/master/messages", ]
     conf['installretry'] = 3
     conf['autoinstall'] = True
     conf['config'] = "kooker.conf"
